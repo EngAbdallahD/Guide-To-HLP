@@ -102,7 +102,7 @@
     .engine-card-clickable-area { cursor: pointer; }
     .engine-card-clickable-area:hover { /* Add subtle hover for the clickable area if desired */ }
     .engine-card:hover { /* General hover for card, less pronounced if buttons are present */
-      transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+        transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     }
     .engine-id { font-size: 1.4em; font-weight: bold; color: #3498db; margin-bottom: 10px; }
     .engine-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
@@ -413,123 +413,226 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
     import {
-        getFirestore, collection, addDoc, getDocs, doc, deleteDoc, setDoc // Ensure setDoc is imported if you plan to use Machine ID as Firestore Doc ID
+        getFirestore, collection, addDoc, getDocs, doc, deleteDoc, setDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import {
         getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
+    // --- DEBUGGING HELPER ---
+    function mobileLog(message) {
+        console.log("MOBILE DEBUG:", message);
+        // For situations where console isn't easily accessible on mobile, you can temporarily uncomment the next line.
+        // Be aware that alert() will halt script execution until you dismiss it.
+        // alert("MOBILE DEBUG: " + message);
+    }
+
+    // --- Firebase Configuration ---
+    // IMPORTANT: For production, consider securing your API keys (e.g., using Firebase App Check or backend functions).
+    // The key below is visible in client-side code.
     const firebaseConfig = {
-      apiKey: "AIzaSyCGfxeiBzsJC3mvp5OQokdayGTMvQm79m0", // Replace with your actual API key
-      authDomain: "motor-inventory-77e1f.firebaseapp.com",
-      projectId: "motor-inventory-77e1f",
-      storageBucket: "motor-inventory-77e1f.appspot.com",
-      messagingSenderId: "896639039816",
-      appId: "1:896639039816:web:0c080c5cb6146f309e9b7d",
-      measurementId: "G-ZEEE17JMH5"
+        apiKey: "AIzaSyCGfxeiBzsJC3mvp5OQokdayGTMvQm79m0", // Replace with your actual API key if different
+        authDomain: "motor-inventory-77e1f.firebaseapp.com",
+        projectId: "motor-inventory-77e1f",
+        storageBucket: "motor-inventory-77e1f.appspot.com",
+        messagingSenderId: "896639039816",
+        appId: "1:896639039816:web:0c080c5cb6146f309e9b7d",
+        measurementId: "G-ZEEE17JMH5"
     };
 
-    const app = initializeApp(firebaseConfig);
-    getAnalytics(app); // Call it to initialize
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-    const enginesCollectionRef = collection(db, "engines"); // Firestore collection name
+    mobileLog("Firebase config defined.");
 
-    let engines = []; // Local cache of machine data
+    const app = initializeApp(firebaseConfig);
+    mobileLog("Firebase app initialized.");
+    try {
+        getAnalytics(app); // Call it to initialize
+        mobileLog("Firebase Analytics initialized (or attempted).");
+    } catch(e) {
+        mobileLog("Error initializing Firebase Analytics: " + e.message);
+    }
+    const db = getFirestore(app);
+    mobileLog("Firestore DB initialized.");
+    const storage = getStorage(app);
+    mobileLog("Firebase Storage initialized.");
+    const enginesCollectionRef = collection(db, "engines");
+    mobileLog("Engines collection reference created.");
+
+
+    let engines = [];
     let currentUser = '';
     let isAdmin = false;    // Administrator role (can add/delete)
     let isManager = false;  // Manager role (can manage credentials)
 
-    // --- Modifiable Credentials (defaults) ---
     let userLoginDetails = { username: 'HLP', password: 'HLP' };
     let adminLoginDetails = { username: 'HLP', password: 'MCC' };
     const managerLoginDetails = { username: 'Manager', password: '421056' };
 
-    // DOM Elements
     const loginBackgroundSlideshow = document.getElementById('loginBackgroundSlideshow');
     const userManagementBtn = document.getElementById('userManagementBtn');
     const managerControlPanel = document.getElementById('managerControlPanel');
-    const loginError = document.getElementById('loginError'); // Define loginError globally for access
+    const loginError = document.getElementById('loginError');
 
     async function loadEnginesFromFirestore() {
+        mobileLog("Entering loadEnginesFromFirestore()");
         try {
             const querySnapshot = await getDocs(enginesCollectionRef);
             engines = querySnapshot.docs.map(docSnapshot => ({ ...docSnapshot.data(), firestoreDocId: docSnapshot.id }));
-            console.log("Machine data loaded from Firestore:", engines);
+            mobileLog(`Machine data loaded from Firestore. Count: ${engines.length}`);
+            console.log("Machine data loaded from Firestore (actual data):", engines);
         } catch (error) {
             console.error("Error loading machine data from Firestore:", error);
+            mobileLog("ERROR in loadEnginesFromFirestore: " + error.message + (error.stack ? "\nStack: " + error.stack : ""));
             engines = [];
             alert("Could not load machine data from the database. Please check the console for errors.");
         }
+        mobileLog("Calling updateStatistics from loadEnginesFromFirestore");
         updateStatistics();
+        mobileLog("Calling displayEngines from loadEnginesFromFirestore");
         displayEngines(engines);
+        mobileLog("loadEnginesFromFirestore finished.");
     }
 
-    function login() {
+    window.login = function() { // Make sure it's globally accessible if called by onclick
+        mobileLog("login() function called.");
         const usernameInput = document.getElementById('username').value;
         const passwordInput = document.getElementById('password').value;
         
         isAdmin = false;
         isManager = false;
-        loginError.style.display = 'none'; // Hide error initially
+        if(loginError) loginError.style.display = 'none';
+
+        mobileLog(`Attempting login with user: '${usernameInput}'`);
 
         if (usernameInput === userLoginDetails.username && passwordInput === userLoginDetails.password) {
             currentUser = userLoginDetails.username;
+            mobileLog("User login successful. Calling showMainApp().");
             showMainApp();
         } else if (usernameInput === adminLoginDetails.username && passwordInput === adminLoginDetails.password) {
             currentUser = `${adminLoginDetails.username} (Admin)`;
             isAdmin = true;
+            mobileLog("Admin login successful. Calling showMainApp().");
             showMainApp();
         } else if (usernameInput === managerLoginDetails.username && passwordInput === managerLoginDetails.password) {
             currentUser = `${managerLoginDetails.username} (Manager)`;
             isManager = true;
+            mobileLog("Manager login successful. Calling showMainApp().");
             showMainApp();
         } else {
-            loginError.textContent = 'Invalid credentials. Please try again.';
-            loginError.style.display = 'block';
-            setTimeout(() => { loginError.style.display = 'none'; }, 3000);
+            mobileLog("Login failed: Invalid credentials.");
+            if(loginError) {
+                loginError.textContent = 'Invalid credentials. Please try again.';
+                loginError.style.display = 'block';
+                setTimeout(() => { loginError.style.display = 'none'; }, 3000);
+            } else {
+                mobileLog("loginError element not found!");
+            }
         }
     }
 
     async function showMainApp() {
-        document.getElementById('loginScreen').classList.add('hidden');
-        if (loginBackgroundSlideshow) loginBackgroundSlideshow.classList.add('hidden');
-        document.getElementById('mainApp').classList.remove('hidden');
-        document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'; // Restore app background
-        updateUserInterface();
-        await loadEnginesFromFirestore(); // Load data after UI update
+        mobileLog("Entering showMainApp()");
+        try {
+            const loginScreenElement = document.getElementById('loginScreen');
+            if (loginScreenElement) {
+                loginScreenElement.classList.add('hidden');
+                mobileLog("loginScreen hidden class added.");
+            } else {
+                mobileLog("loginScreen element NOT FOUND.");
+            }
+
+            if (loginBackgroundSlideshow) {
+                loginBackgroundSlideshow.classList.add('hidden');
+                mobileLog("loginBackgroundSlideshow hidden class added.");
+            } else {
+                mobileLog("loginBackgroundSlideshow element NOT FOUND.");
+            }
+
+            const mainAppElement = document.getElementById('mainApp');
+            if (mainAppElement) {
+                mainAppElement.classList.remove('hidden');
+                mobileLog("mainApp 'hidden' class REMOVED. Current classes: " + mainAppElement.className);
+                
+                // Check its actual display style after a brief timeout to allow rendering
+                setTimeout(() => {
+                    const mainAppDisplay = window.getComputedStyle(mainAppElement).display;
+                    mobileLog("mainApp computed display style (after timeout): " + mainAppDisplay);
+                    if (mainAppDisplay === 'none') {
+                        mobileLog("WARNING: mainApp computed display is 'none' even after removing .hidden class and timeout!");
+                    }
+                }, 100);
+
+            } else {
+                mobileLog("mainApp element NOT FOUND! Cannot proceed.");
+                return;
+            }
+
+            document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';
+            mobileLog("Body background set for main app.");
+
+            mobileLog("Calling updateUserInterface().");
+            updateUserInterface();
+            mobileLog("updateUserInterface() finished.");
+
+            mobileLog("Calling loadEnginesFromFirestore().");
+            await loadEnginesFromFirestore();
+            mobileLog("loadEnginesFromFirestore() finished successfully.");
+
+            mobileLog("showMainApp() successfully completed.");
+        } catch (error) {
+            console.error("CRITICAL ERROR in showMainApp:", error);
+            mobileLog("CRITICAL ERROR in showMainApp: " + error.message + (error.stack ? ("\nStack: " + error.stack) : ""));
+            alert("Critical error loading application: " + error.message);
+        }
     }
 
     function updateUserInterface() {
-        const userRoleEl = document.getElementById('userRole');
-        const currentUserSpan = document.getElementById('currentUser');
-        const adminFormSection = document.getElementById('adminSection'); // Renamed for clarity
-        const statsSection = document.getElementById('statsSection');
+        mobileLog("Entering updateUserInterface()");
+        try {
+            const userRoleEl = document.getElementById('userRole');
+            const currentUserSpan = document.getElementById('currentUser');
+            const adminFormSection = document.getElementById('adminSection');
+            const statsSection = document.getElementById('statsSection');
 
-        currentUserSpan.textContent = currentUser;
-        managerControlPanel.classList.add('hidden'); 
-        userManagementBtn.classList.add('hidden');
-        adminFormSection.classList.add('hidden'); 
-        statsSection.classList.add('hidden');
+            if (!userRoleEl || !currentUserSpan || !adminFormSection || !statsSection || !managerControlPanel || !userManagementBtn) {
+                mobileLog("One or more UI elements for updateUserInterface not found. This could cause issues.");
+            }
 
+            if(currentUserSpan) currentUserSpan.textContent = currentUser;
+            if(managerControlPanel) managerControlPanel.classList.add('hidden');  
+            if(userManagementBtn) userManagementBtn.classList.add('hidden');
+            if(adminFormSection) adminFormSection.classList.add('hidden');  
+            if(statsSection) statsSection.classList.add('hidden');
 
-        if (isManager) {
-            userRoleEl.textContent = 'Manager';
-            userRoleEl.style.background = 'rgba(142, 68, 173, 0.2)'; 
-            userRoleEl.style.borderColor = '#8e44ad'; // Purple for Manager
-            statsSection.classList.remove('hidden'); 
-            userManagementBtn.classList.remove('hidden');
-        } else if (isAdmin) {
-            userRoleEl.textContent = 'Administrator';
-            userRoleEl.style.background = 'rgba(231,76,60,0.2)';
-            userRoleEl.style.borderColor = '#e74c3c'; // Red for Admin
-            adminFormSection.classList.remove('hidden');
-            statsSection.classList.remove('hidden');
-        } else { // Basic User
-            userRoleEl.textContent = 'User';
-            userRoleEl.style.background = 'rgba(52,152,219,0.2)';
-            userRoleEl.style.borderColor = '#3498db'; // Blue for User
-            // User sees search and results, but not stats or admin form
+            if (isManager) {
+                if(userRoleEl) {
+                     userRoleEl.textContent = 'Manager';
+                     userRoleEl.style.background = 'rgba(142, 68, 173, 0.2)';  
+                     userRoleEl.style.borderColor = '#8e44ad';
+                }
+                if(statsSection) statsSection.classList.remove('hidden');  
+                if(userManagementBtn) userManagementBtn.classList.remove('hidden');
+                 mobileLog("UI updated for Manager.");
+            } else if (isAdmin) {
+                if(userRoleEl) {
+                    userRoleEl.textContent = 'Administrator';
+                    userRoleEl.style.background = 'rgba(231,76,60,0.2)';
+                    userRoleEl.style.borderColor = '#e74c3c';
+                }
+                if(adminFormSection) adminFormSection.classList.remove('hidden');
+                if(statsSection) statsSection.classList.remove('hidden');
+                mobileLog("UI updated for Administrator.");
+            } else { // Basic User
+                if(userRoleEl) {
+                    userRoleEl.textContent = 'User';
+                    userRoleEl.style.background = 'rgba(52,152,219,0.2)';
+                    userRoleEl.style.borderColor = '#3498db';
+                }
+                mobileLog("UI updated for User.");
+            }
+            mobileLog("updateUserInterface() completed.");
+        } catch (error) {
+            console.error("Error in updateUserInterface:", error);
+            mobileLog("ERROR in updateUserInterface: " + error.message + (error.stack ? "\nStack: " + error.stack : ""));
         }
     }
 
@@ -538,9 +641,9 @@
         managerControlPanel.classList.toggle('hidden');
         if (!managerControlPanel.classList.contains('hidden')) {
             document.getElementById('manageUserUsername').value = userLoginDetails.username;
-            document.getElementById('manageUserPassword').value = ''; 
+            document.getElementById('manageUserPassword').value = '';  
             document.getElementById('manageAdminUsername').value = adminLoginDetails.username;
-            document.getElementById('manageAdminPassword').value = ''; 
+            document.getElementById('manageAdminPassword').value = '';  
             document.getElementById('credentialUpdateStatus').textContent = '';
         }
     }
@@ -557,20 +660,26 @@
         const statusDiv = document.getElementById('credentialUpdateStatus');
         if (updatesMade) {
             statusDiv.textContent = 'Credentials updated successfully for this session!';
-            statusDiv.style.color = '#27ae60'; // Green for success
+            statusDiv.style.color = '#27ae60';
         } else {
             statusDiv.textContent = 'No new passwords entered.';
-            statusDiv.style.color = '#f39c12'; // Orange for no change
+            statusDiv.style.color = '#f39c12';
         }
-        document.getElementById('manageUserPassword').value = ''; 
-        document.getElementById('manageAdminPassword').value = ''; 
+        document.getElementById('manageUserPassword').value = '';  
+        document.getElementById('manageAdminPassword').value = '';  
         setTimeout(() => { statusDiv.textContent = ''; }, 4000);
     }
 
     function updateStatistics() {
-        document.getElementById('totalEngines').textContent = engines.length;
-        document.getElementById('activeEngines').textContent = engines.filter(e => e.status === 'Active').length;
-        document.getElementById('maintenanceEngines').textContent = engines.filter(e => e.status === 'Maintenance').length;
+        mobileLog("Updating statistics");
+        const totalEnginesEl = document.getElementById('totalEngines');
+        const activeEnginesEl = document.getElementById('activeEngines');
+        const maintenanceEnginesEl = document.getElementById('maintenanceEngines');
+
+        if(totalEnginesEl) totalEnginesEl.textContent = engines.length;
+        if(activeEnginesEl) activeEnginesEl.textContent = engines.filter(e => e.status === 'Active').length;
+        if(maintenanceEnginesEl) maintenanceEnginesEl.textContent = engines.filter(e => e.status === 'Maintenance').length;
+        mobileLog("Statistics updated.");
     }
     
     window.searchEngines = function() {
@@ -578,7 +687,7 @@
         const searchField = document.getElementById('searchField').value;
 
         if (searchTerm === '') {
-             displayEngines(engines); // Show all if search term is empty, regardless of field
+             displayEngines(engines); 
              return;
         }
 
@@ -604,8 +713,13 @@
     }
 
     function displayEngines(engineList) {
+        mobileLog(`Displaying ${engineList.length} engines.`);
         const engineGrid = document.getElementById('engineGrid');
         const noResults = document.getElementById('noResults');
+        if(!engineGrid || !noResults) {
+            mobileLog("ERROR: engineGrid or noResults element not found in displayEngines.");
+            return;
+        }
         engineGrid.innerHTML = '';
 
         if (engineList.length === 0) {
@@ -613,6 +727,7 @@
                 'No machines found matching your search criteria.' :
                 'No machines currently in inventory. Add new machines via the form if you are an Administrator.';
             noResults.style.display = 'block';
+            mobileLog("No engines to display, showing 'no results' message.");
             return;
         }
         noResults.style.display = 'none';
@@ -623,7 +738,7 @@
             
             const clickableArea = document.createElement('div');
             clickableArea.className = 'engine-card-clickable-area';
-            if (!isAdmin) { // Make area clickable for details only if not admin (admin uses button)
+            if (!isAdmin) { 
                  clickableArea.onclick = () => showEngineDetails(engine.id, engine.firestoreDocId);
             }
 
@@ -633,7 +748,7 @@
             clickableArea.innerHTML = `
                 <div class="engine-id">${engine.id || 'N/A'} ${engine.equipTagNo ? `(${engine.equipTagNo})` : ''}</div>
                 <div class="engine-image">
-                    ${engine.image ? `<img src="${engine.image}" alt="Machine Image">` : '📷 No Image'}
+                    ${engine.image ? `<img src="${engine.image}" alt="Machine Image" style="width:100%; height:100%; object-fit:contain;">` : '📷 No Image'}
                 </div>
                 <div class="engine-info">
                     <div class="info-item"><div class="info-label">Description</div><div class="info-value">${engine.equipDesc || 'N/A'}</div></div>
@@ -655,6 +770,7 @@
             }
             engineGrid.appendChild(card);
         });
+        mobileLog("Finished rendering engine cards.");
     }
 
     function getStatusColor(status) {
@@ -666,7 +782,7 @@
         return `<div class="info-item"><div class="info-label">${label}</div><div class="info-value">${isHtml ? value : String(value).replace(/\n/g, '<br>')}</div></div>`;
     }
 
-    window.showEngineDetails = function(engineSystemId, firestoreDocId) { // firestoreDocId available if needed
+    window.showEngineDetails = function(engineSystemId, firestoreDocId) { 
         const engine = engines.find(e => e.id === engineSystemId);
         if (!engine) { alert("Machine details could not be found."); return; }
         
@@ -680,11 +796,9 @@
         contentHtml += `<div class="modal-section-title">Core Identifiers</div>`;
         contentHtml += formatModalItem('Machine ID (System)', engine.id);
         contentHtml += formatModalItem('Panel Number', engine.panelNumber);
-
         contentHtml += `<div class="modal-section-title">Equipment Information</div>`;
         contentHtml += formatModalItem('Equipment Tag No.', engine.equipTagNo);
         contentHtml += formatModalItem('Equipment Description', engine.equipDesc);
-
         contentHtml += `<div class="modal-section-title">Motor MCC Data</div>`;
         contentHtml += formatModalItem('Switch Room No.', engine.switchRoomNo);
         contentHtml += formatModalItem('MCC', engine.mcc);
@@ -705,7 +819,6 @@
         contentHtml += formatModalItem('Estimated Length', engine.estimatedLength_mcc);
         contentHtml += formatModalItem('MV CT Ratio', engine.mvCtRatio_mcc);
         contentHtml += formatModalItem('HHM-Fuses SIBA', engine.hhmFusesSiba_mcc);
-
         contentHtml += `<div class="modal-section-title">Motor Name Plate</div>`;
         contentHtml += formatModalItem('Motor Description', engine.motorDescription_np);
         contentHtml += formatModalItem('Type', engine.type_np);
@@ -721,13 +834,11 @@
         contentHtml += formatModalItem('DE-Bearing', engine.deBearing_np);
         contentHtml += formatModalItem('NDE-Bearing', engine.ndeBearing_np);
         contentHtml += formatModalItem('Note (Name Plate)', engine.note_np);
-
         contentHtml += `<div class="modal-section-title">Motor Replacements History</div>`;
         contentHtml += formatModalItem('Replacement Date 1', engine.replacementDate1);
         contentHtml += formatModalItem('Replacement Date 2', engine.replacementDate2);
         contentHtml += formatModalItem('Replacement Date 3', engine.replacementDate3);
         contentHtml += formatModalItem('Replacement Date 4', engine.replacementDate4);
-
         contentHtml += `<div class="modal-section-title">Breakers Related To</div>`;
         contentHtml += formatModalItem('Breaker 1: Equip. Desc.', engine.breakerEquipDesc1);
         contentHtml += formatModalItem('Breaker 1: Equip. Tag', engine.breakerEquipTag1);
@@ -735,19 +846,17 @@
         contentHtml += formatModalItem('Breaker 2: Equip. Desc.', engine.breakerEquipDesc2);
         contentHtml += formatModalItem('Breaker 2: Equip. Tag', engine.breakerEquipTag2);
         contentHtml += formatModalItem('Breaker 2: MCC Location', engine.breakerMccLocation2);
-
         contentHtml += `<div class="modal-section-title">Additional Information (Listed)</div>`;
         contentHtml += formatModalItem('MOT.No.', engine.motNo_add);
         contentHtml += formatModalItem('Asset No.', engine.assetNo_add);
         contentHtml += formatModalItem('HLP Feedback / Note', engine.hlpFeedbackNote_add);
-
         contentHtml += `<div class="modal-section-title">System & Maintenance</div>`;
         contentHtml += formatModalItem('Status', `<span style="color: ${getStatusColor(engine.status)}">${engine.status}</span>`, true);
         contentHtml += formatModalItem('General Additional Notes', engine.notes_general);
         
         modalContent.innerHTML = contentHtml;
         modal.classList.remove('hidden');
-        modal.style.display = 'flex'; // Ensure modal is visible
+        modal.style.display = 'flex'; 
     }
 
     window.closeModal = function() {
@@ -764,6 +873,7 @@
     }
 
     window.addEngine = async function() {
+        mobileLog("addEngine() called.");
         if (!isAdmin) { alert('Access denied. Administrator privileges required to add machines.'); return; }
         
         const engineIdValue = document.getElementById('engineId').value.trim();
@@ -795,54 +905,62 @@
             breakerEquipDesc1: getFieldValue('breakerEquipDesc1'), breakerEquipTag1: getFieldValue('breakerEquipTag1'), breakerMccLocation1: getFieldValue('breakerMccLocation1'),
             breakerEquipDesc2: getFieldValue('breakerEquipDesc2'), breakerEquipTag2: getFieldValue('breakerEquipTag2'), breakerMccLocation2: getFieldValue('breakerMccLocation2'),
             motNo_add: getFieldValue('motNo_add'), assetNo_add: getFieldValue('assetNo_add'), hlpFeedbackNote_add: getFieldValue('hlpFeedbackNote_add'),
-            status: document.getElementById('status').value, notes_general: getFieldValue('notes_general'), image: '' // Image URL will be set after upload
+            status: document.getElementById('status').value, notes_general: getFieldValue('notes_general'), image: ''
         };
+        mobileLog("New machine data object created: " + JSON.stringify(newMachineData).substring(0, 200) + "...");
+
 
         const saveDataToFirestore = async (machineDataWithImage) => {
+            mobileLog("Entering saveDataToFirestore for machine ID: " + machineDataWithImage.id);
             try {
-                // Using Machine ID as Firestore Document ID for easier reference and uniqueness enforcement.
-                // This means Engine ID must be unique.
                 const docRef = doc(db, "engines", machineDataWithImage.id);
-                await setDoc(docRef, machineDataWithImage); // Use setDoc to specify custom ID
-
-                // const docRef = await addDoc(enginesCollectionRef, machineDataWithImage); // Use this for auto-generated ID
-                console.log("Machine added to Firestore with ID: ", machineDataWithImage.id);
-                await loadEnginesFromFirestore(); 
+                await setDoc(docRef, machineDataWithImage); 
+                mobileLog("Machine added to Firestore with ID: " + machineDataWithImage.id);
+                await loadEnginesFromFirestore();  
                 clearForm();
                 alert('Machine data added successfully!');
-                document.getElementById('searchInput').value = machineDataWithImage.id; 
+                document.getElementById('searchInput').value = machineDataWithImage.id;  
                 searchEngines();
             } catch (error) {
                 console.error("Error adding machine data to Firestore: ", error);
+                mobileLog("ERROR in saveDataToFirestore: " + error.message + (error.stack ? "\nStack: " + error.stack : ""));
                 alert('Error adding machine data to database. Check console for details. Ensure Machine ID is unique.');
             }
         };
 
         if (imageFile) {
+            mobileLog("Image file present, attempting upload: " + imageFile.name);
             const imageStoragePath = `machine_images/${newMachineData.id}-${Date.now()}-${imageFile.name}`;
             const fileRef = storageRef(storage, imageStoragePath);
             const uploadTask = uploadBytesResumable(fileRef, imageFile);
             uploadTask.on('state_changed',
-                (snapshot) => { console.log('Upload is ' + (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + '% done'); },
+                (snapshot) => { 
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    mobileLog('Upload is ' + progress + '% done'); 
+                },
                 (error) => {
                     console.error("Image upload error: ", error);
+                    mobileLog("Image upload error: " + error.code + " - " + error.message + (error.stack ? "\nStack: " + error.stack : ""));
                     alert('Image upload failed. Saving data without image. Error: ' + error.message);
-                    saveDataToFirestore(newMachineData); // Save data without image URL
+                    saveDataToFirestore(newMachineData); 
                 },
                 async () => {
+                    mobileLog("Image upload successful. Getting download URL...");
                     try {
                         newMachineData.image = await getDownloadURL(uploadTask.snapshot.ref);
-                        console.log('File available at', newMachineData.image);
+                        mobileLog('File available at: ' + newMachineData.image);
                         await saveDataToFirestore(newMachineData);
                     } catch (e) {
                         console.error("Error getting download URL: ", e);
+                        mobileLog("Error getting download URL: " + e.message + (e.stack ? "\nStack: " + e.stack : ""));
                         alert('Failed to get image URL after upload. Saving data without image.');
-                        await saveDataToFirestore(newMachineData); 
+                        await saveDataToFirestore(newMachineData);  
                     }
                 }
             );
         } else {
-            await saveDataToFirestore(newMachineData); // No image to upload
+            mobileLog("No image file present, saving data without image.");
+            await saveDataToFirestore(newMachineData);
         }
     }
 
@@ -850,62 +968,71 @@
         const form = document.querySelector('.admin-form');
         if (form) {
             form.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], input[type="file"], textarea').forEach(input => input.value = '');
-            form.querySelectorAll('select').forEach(select => select.selectedIndex = 0); // Reset selects to first option
+            form.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
         }
         document.getElementById('imagePreview').innerHTML = '';
+        mobileLog("Admin form cleared.");
     }
 
     window.promptDeleteMachine = function(machineId, firestoreDocId) {
         if (!isAdmin) { alert("Access Denied. Administrator privileges required."); return; }
         if (confirm(`Are you sure you want to delete machine ${machineId}? This action cannot be undone.`)) {
-            deleteMachine(firestoreDocId);
+            deleteMachineFromDb(firestoreDocId); // Renamed to avoid conflict with local 'deleteMachine' if any
         }
     }
 
-    async function deleteMachine(firestoreDocId) { // Not exposed to window, called by promptDeleteMachine
-        if (!isAdmin) { return; } // Double check, though promptDeleteMachine already does.
+    async function deleteMachineFromDb(firestoreDocId) { 
+        mobileLog("Attempting to delete machine with Firestore Doc ID: " + firestoreDocId);
+        if (!isAdmin) { return; } 
         try {
             const machineDocRef = doc(db, "engines", firestoreDocId);
             await deleteDoc(machineDocRef);
-            console.log("Machine deleted from Firestore:", firestoreDocId);
-            await loadEnginesFromFirestore(); 
+            mobileLog("Machine deleted from Firestore:" + firestoreDocId);
+            await loadEnginesFromFirestore();  
             alert('Machine deleted successfully!');
         } catch (error) {
             console.error("Error deleting machine from Firestore: ", error);
+            mobileLog("ERROR deleting machine: " + error.message + (error.stack ? "\nStack: " + error.stack : ""));
             alert('Error deleting machine. Check console for details.');
         }
     }
 
     window.logout = function() {
+        mobileLog("logout() called.");
         document.getElementById('mainApp').classList.add('hidden');
         if (managerControlPanel) managerControlPanel.classList.add('hidden');
         if (userManagementBtn) userManagementBtn.classList.add('hidden');
         
         document.getElementById('loginScreen').classList.remove('hidden');
         if (loginBackgroundSlideshow) loginBackgroundSlideshow.classList.remove('hidden');
-        document.body.style.background = ''; // Let slideshow take over or default body bg for login
+        document.body.style.background = ''; 
         
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
         currentUser = ''; isAdmin = false; isManager = false;
-        engines = []; // Clear local cache on logout
-        updateStatistics(); 
-        displayEngines([]); 
+        engines = []; 
+        updateStatistics();  
+        displayEngines([]);  
+        mobileLog("Logout complete, UI reset to login screen.");
     }
 
-    // Initial Setup on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function() {
+        mobileLog("DOMContentLoaded event fired.");
         const loginScreenElement = document.getElementById('loginScreen');
         if (loginScreenElement) {
             loginScreenElement.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !loginScreenElement.classList.contains('hidden')) {
                     const activeEl = document.activeElement;
                     if ((activeEl.tagName === 'INPUT' || activeEl.tagName === 'BUTTON') && loginScreenElement.contains(activeEl)) {
+                        mobileLog("Enter key pressed on login screen, calling login().");
                         login();
                     }
                 }
             });
+        } else {
+            mobileLog("Login screen element not found on DOMContentLoaded.");
         }
+
         const engineModalElement = document.getElementById('engineModal');
         if (engineModalElement) {
             engineModalElement.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
@@ -918,10 +1045,15 @@
 
         if (loginScreenElement && !loginScreenElement.classList.contains('hidden') && loginBackgroundSlideshow) {
             loginBackgroundSlideshow.classList.remove('hidden');
-            document.body.style.background = 'transparent'; // Ensure slideshow is visible under login form
+            document.body.style.background = 'transparent';
+            mobileLog("Login screen active, slideshow visible.");
         } else if (loginBackgroundSlideshow) {
             loginBackgroundSlideshow.classList.add('hidden');
+            mobileLog("Login screen not active or not found, slideshow hidden.");
+        } else {
+            mobileLog("Login screen and/or slideshow not found on DOMContentLoaded for visibility check.");
         }
+        mobileLog("Initial setup on DOMContentLoaded finished.");
     });
 </script>
 </body>
