@@ -12,16 +12,12 @@
         min-height: 100vh;
         color: #ecf0f1;
         overflow-x: hidden;
+        font-size: 14px;
     }
 
-    #loginBackgroundSlideshow {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden;
-    }
-    .slide {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background-size: cover; background-position: center center;
-        opacity: 0; animation: fadeSlide 49s infinite; /* 7 images * 7s each */
-    }
+    /* --- Login Background Slideshow --- */
+    #loginBackgroundSlideshow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
+    .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center center; opacity: 0; animation: fadeSlide 49s infinite; }
     .slide:nth-child(1) { background-image: url('bg1.jpg'); animation-delay: 0s; }
     .slide:nth-child(2) { background-image: url('bg2.jpg'); animation-delay: 7s; }
     .slide:nth-child(3) { background-image: url('bg3.jpg'); animation-delay: 14s; }
@@ -29,138 +25,107 @@
     .slide:nth-child(5) { background-image: url('bg5.jpg'); animation-delay: 28s; }
     .slide:nth-child(6) { background-image: url('bg6.jpg'); animation-delay: 35s; }
     .slide:nth-child(7) { background-image: url('bg7.jpg'); animation-delay: 42s; }
+    @keyframes fadeSlide { 0% { opacity: 0; transform: scale(1.05) rotate(0.5deg); } 10% { opacity: 1; transform: scale(1) rotate(0deg); } 14.28% { opacity: 1; transform: scale(1) rotate(0deg); } 24.28% { opacity: 0; transform: scale(1.05) rotate(-0.5deg); } 25% { opacity: 0; } 100% { opacity: 0; } }
 
-    @keyframes fadeSlide {
-        0% { opacity: 0; transform: scale(1.05) rotate(0.5deg); }
-        10% { opacity: 1; transform: scale(1) rotate(0deg); }
-        14.28% { opacity: 1; transform: scale(1) rotate(0deg); } /* Hold state (100 / 7 images) */
-        24.28% { opacity: 0; transform: scale(1.05) rotate(-0.5deg); }
-        25% { opacity: 0; } 100% { opacity: 0; }
-    }
-
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .login-container, .main-container, .manager-panel-container {
-        background: rgba(52, 73, 94, 0.88); border-radius: 15px; padding: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3); backdrop-filter: blur(8px);
-        border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 1;
-    }
-    .login-container { max-width: 450px; margin: 100px auto; text-align: center; }
-    .logo img { max-width: 200px; height: auto; margin-bottom: 15px; }
+    /* --- General Containers & Login --- */
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
+    .login-container, .main-container, .manager-panel-container { background: rgba(52, 73, 94, 0.88); border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 1; }
+    .login-container { max-width: 400px; margin: 80px auto; text-align: center; }
+    .logo { margin-bottom: 15px; }
+    .logo img { max-width: 180px; height: auto; display: block; margin: 0 auto 10px auto; }
+    .login-container h2 { text-align: center; margin-bottom: 5px; color: #3498db; }
+    .login-container p { text-align: center; }
     
-    .form-group { margin-bottom: 20px; text-align: left; }
+    /* --- Forms & Inputs (including password toggle) --- */
+    .form-group { margin-bottom: 15px; text-align: left; }
     .form-group label { display: block; margin-bottom: 5px; color: #bdc3c7; font-weight: 500; }
-    .form-group input, .form-group select, .form-group textarea {
-        width: 100%; padding: 12px; border: 1px solid #34495e; border-radius: 8px;
-        background: rgba(44, 62, 80, 0.8); color: #ecf0f1; font-size: 14px;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-        outline: none; border-color: #3498db; box-shadow: 0 0 10px rgba(52,152,219,0.3);
-    }
+    .password-wrapper { position: relative; display: flex; align-items: center; }
+    .password-wrapper input[type="password"], .password-wrapper input[type="text"] { padding-right: 45px !important; /* Space for toggle */ width: 100%; }
+    .toggle-password { position: absolute; right: 1px; top: 1px; bottom: 1px; width: 40px; background: rgba(69, 90, 100, 0.7); border: none; color: #bdc3c7; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center; border-radius: 0 7px 7px 0; }
+    .toggle-password:hover { color: #3498db; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #34495e; border-radius: 8px; background: rgba(44, 62, 80, 0.8); color: #ecf0f1; font-size: inherit; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #3498db; box-shadow: 0 0 10px rgba(52,152,219,0.3); }
 
-    .btn {
-        background: linear-gradient(45deg, #3498db, #2980b9); color: white; padding: 10px 20px;
-        border: none; border-radius: 8px; cursor: pointer; font-size: 15px;
-        font-weight: 500; transition: all 0.3s ease; margin: 5px; text-decoration: none; display: inline-block;
-    }
+    /* --- Buttons --- */
+    .btn { background: linear-gradient(45deg, #3498db, #2980b9); color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95em; font-weight: 500; transition: all 0.3s ease; margin: 5px; text-decoration: none; display: inline-block; line-height: 1.4; }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(52,152,219,0.4); }
     .btn-secondary { background: linear-gradient(45deg, #95a5a6, #7f8c8d); }
     .btn-danger { background: linear-gradient(45deg, #e74c3c, #c0392b); }
     .btn-success { background: linear-gradient(45deg, #27ae60, #229954); }
 
-    .header {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    .user-info { display: flex; align-items: center; gap: 10px; }
-    .user-role {
-        padding: 5px 12px; border-radius: 20px; font-size: 12px;
-        border: 1px solid;
-    }
+    /* --- Header & User Info (Centered Title) --- */
+    .header { display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); min-height: 50px; }
+    .header h1 { font-size: 1.5em; text-align: center; margin: 0; color: #3498db; padding: 0 50px; /* Padding to avoid visual overlap with user-info */ }
+    .user-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: absolute; right: 0px; top: 50%; transform: translateY(-50%); }
+    .user-role { padding: 4px 10px; font-size: 0.8em; border: 1px solid; border-radius: 20px; }
 
-    .search-section { margin-bottom: 30px; }
-    .search-box { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
-    .search-box input[type="text"] { flex: 1; }
-    .search-box select {
-        padding: 12px; border: 1px solid #34495e; border-radius: 8px;
-        background: rgba(44, 62, 80, 0.8); color: #ecf0f1; font-size: 14px;
-        max-width: 200px;
-    }
-    .search-box select:focus {
-        outline: none; border-color: #3498db; box-shadow: 0 0 10px rgba(52,152,219,0.3);
-    }
-
-    .engine-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-top: 20px;
-    }
-    .engine-card {
-        background: rgba(44,62,80,0.8); border-radius: 12px; padding: 20px;
-        border: 1px solid rgba(255,255,255,0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex; flex-direction: column; justify-content: space-between;
-    }
+    /* --- Search Section (Mobile First) --- */
+    .search-section { margin-bottom: 20px; }
+    .search-section h3 { color: #3498db; text-align: center; margin-bottom: 15px; }
+    .search-box { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .search-box select, .search-box input[type="text"], .search-box .btn { width: 100%; max-width: none; }
+    
+    /* --- Machine Grid (Mobile First) --- */
+    .engine-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+    .engine-card { background: rgba(44,62,80,0.8); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
     .engine-card-clickable-area { cursor: pointer; }
-    .engine-card-clickable-area:hover { /* Add subtle hover for the clickable area if desired */ }
-    .engine-card:hover { /* General hover for card, less pronounced if buttons are present */
-      transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-    }
-    .engine-id { font-size: 1.4em; font-weight: bold; color: #3498db; margin-bottom: 10px; }
-    .engine-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-    .info-item { background: rgba(52,73,94,0.5); padding: 8px; border-radius: 5px; font-size: 13px; word-wrap: break-word; }
+    .engine-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.2); }
+    .engine-id { font-size: 1.2em; font-weight: bold; color: #3498db; margin-bottom: 8px; }
+    .engine-info { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px; }
+    .info-item { background: rgba(52,73,94,0.5); padding: 6px; border-radius: 5px; font-size: 0.9em; word-wrap: break-word; }
     .info-label { color: #bdc3c7; font-weight: 500; }
     .info-value { color: #ecf0f1; margin-top: 2px; }
-    .engine-image {
-        width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;
-        background: rgba(52,73,94,0.3); display: flex; align-items: center; justify-content: center; color: #7f8c8d;
-    }
-    .engine-card-actions { margin-top: 15px; text-align: right; display: flex; gap: 10px; justify-content: flex-end; }
-    .engine-card-actions .btn { padding: 8px 15px; font-size: 13px; }
+    .engine-image { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: rgba(52,73,94,0.3); display: flex; align-items: center; justify-content: center; color: #7f8c8d; }
+    .engine-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+    .engine-card-actions { margin-top: 10px; text-align: right; display: flex; gap: 8px; justify-content: flex-end; }
+    .engine-card-actions .btn { padding: 6px 12px; font-size: 0.85em; }
 
-
-    .admin-form, .manager-panel-container {
-        background: rgba(44,62,80,0.7); padding: 25px; border-radius: 12px;
-        margin-bottom: 30px; border: 1px solid rgba(52,152,219,0.3);
-    }
-    .admin-form fieldset, .manager-panel-container fieldset {
-        border: 1px solid rgba(52,152,219,0.4); border-radius: 8px; padding: 20px; margin-bottom: 20px;
-    }
-    .admin-form legend, .manager-panel-container legend {
-        color: #3498db; font-weight: bold; padding: 0 10px; margin-left: 10px; font-size: 1.1em;
-    }
-    .form-row {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 15px; margin-bottom: 15px;
-    }
+    /* --- Admin Form & Manager Panel (Mobile First) --- */
+    .admin-form, .manager-panel-container { background: rgba(44,62,80,0.7); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(52,152,219,0.3); }
+    .admin-form h3, .manager-panel-container h3 { color: #3498db; text-align: center; margin-bottom: 20px; font-size: 1.3em; }
+    .admin-form fieldset, .manager-panel-container fieldset { border: 1px solid rgba(52,152,219,0.4); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+    .admin-form legend, .manager-panel-container legend { color: #3498db; font-weight: bold; padding: 0 8px; margin-left: 8px; font-size: 1em; }
+    .form-row { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
     .form-row .form-group, .admin-form > .form-group { margin-bottom: 0; }
     .form-row-single { grid-column: 1 / -1; }
 
+    /* --- General Helper Classes & Other --- */
     .hidden { display: none !important; }
     #loginBackgroundSlideshow.hidden { display: none !important; }
-
-    .no-results { text-align: center; color: #7f8c8d; font-size: 18px; margin-top: 50px; padding: 20px;}
-    .stats-section {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; margin-bottom: 30px;
-    }
-    .stat-card {
-        background: rgba(52,152,219,0.2); padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #3498db;
-    }
-    .stat-number { font-size: 2em; font-weight: bold; color: #3498db; }
-    .stat-label { color: #bdc3c7; margin-top: 5px; }
-    
-    .modal {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
-        display: flex; align-items: center; justify-content: center; z-index: 1000;
-    }
+    .no-results { text-align: center; color: #7f8c8d; font-size: 1em; margin-top: 30px; padding: 15px;}
+    .stats-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; margin-bottom: 20px; }
+    .stat-card { padding: 15px; background: rgba(52,152,219,0.2); border-radius: 10px; text-align: center; border: 1px solid #3498db; }
+    .stat-number { font-size: 1.8em; font-weight: bold; color: #3498db;}
+    .stat-label { margin-top: 3px; font-size: 0.9em; color: #bdc3c7;}
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; }
     .modal.hidden { display: none !important; }
-    .modal-content {
-        background: #2c3e50; padding: 30px; border-radius: 15px; max-width: 700px; width: 90%;
-        max-height: 85vh; overflow-y: auto;
-    }
+    .modal-content { background: #2c3e50; padding: 20px; border-radius: 15px; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; }
     .modal-content .info-item { margin-bottom: 5px;}
-    .modal-section-title { color: #3498db; font-weight: bold; margin-top: 15px; margin-bottom: 10px; font-size: 1.1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;}
+    .modal-section-title { color: #3498db; font-weight: bold; margin-top: 15px; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;}
+    #credentialUpdateStatus { margin-top: 10px; font-weight: 500; font-size: 0.9em; text-align: center; }
 
-    .manager-panel-container h3 { color: #3498db; margin-bottom: 20px; }
-    .manager-panel-container .form-group { margin-bottom: 15px; }
-    #credentialUpdateStatus { margin-top: 15px; font-weight: 500; }
+    /* --- Media Queries for Larger Screens --- */
+    @media (min-width: 600px) {
+        body { font-size: 15px; }
+        .container { padding: 20px; }
+        .login-container { padding: 30px; }
+        .main-container, .manager-panel-container, .admin-form { padding: 25px; }
+        .header h1 { font-size: 1.8em; padding: 0 100px; }
+        .search-box { flex-direction: row; }
+        .search-box select, .search-box input[type="text"] { width: auto; }
+        .search-box input[type="text"] { flex: 1; }
+        .search-box select { max-width: 180px; }
+        .engine-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+        .engine-info { grid-template-columns: 1fr 1fr; }
+        .form-row { grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); }
+    }
+    @media (min-width: 992px) {
+        body { font-size: 16px; }
+        .header h1 { padding: 0 150px; }
+        .engine-grid { grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); }
+        .search-box select { max-width: 200px; }
+        .form-row { gap: 15px; margin-bottom: 15px; }
+    }
 </style>
 </head>
 <body>
@@ -174,10 +139,16 @@
     <div class="logo"><img src="arab_potash_logo.png" alt="Guide to HLP Machines Logo"></div>
     <h2>Guide to HLP Machines</h2>
     <p style="margin-bottom: 30px; color: #7f8c8d;">Factory Management Portal</p>
-    <div class="form-group"><label for="username">Username</label><input type="text" id="username" placeholder="Enter username"></div>
-    <div class="form-group"><label for="password">Password</label><input type="password" id="password" placeholder="Enter password"></div>
-    <button class="btn" onclick="login()">Login</button>
-    <div id="loginError" style="color: #e74c3c; margin-top: 15px; display: none;">Invalid credentials.</div>
+    <div class="form-group"><label for="loginUsername">Username</label><input type="text" id="loginUsername" placeholder="Enter username"></div>
+    <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <div class="password-wrapper">
+            <input type="password" id="loginPassword" placeholder="Enter password">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('loginPassword', this)">👁️</button>
+        </div>
+    </div>
+    <button class="btn" onclick="handleLogin()">Login</button>
+    <div id="loginErrorDisplay" style="color: #e74c3c; margin-top: 15px; display: none;">Invalid credentials.</div>
 </div>
 
 <div id="mainApp" class="container hidden">
@@ -185,743 +156,435 @@
         <div class="header">
             <h1>🏭 Guide to HLP Machines</h1>
             <div class="user-info">
-                <div class="user-role" id="userRole">User</div>
-                <span id="currentUser"></span>
+                <div class="user-role" id="userRoleDisplay">User</div>
+                <span id="currentUserDisplay">HLP</span>
                 <button id="userManagementBtn" class="btn btn-secondary hidden" onclick="toggleManagerPanel()">User Management</button>
-                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
             </div>
         </div>
 
         <div id="managerControlPanel" class="manager-panel-container hidden">
             <h3>User Account Management</h3>
-            <fieldset>
-                <legend>User Credentials</legend>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="manageUserUsername">Username (Read-only)</label>
-                        <input type="text" id="manageUserUsername" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="manageUserPassword">New Password</label>
-                        <input type="password" id="manageUserPassword" placeholder="Enter new password for User">
-                    </div>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>Administrator Credentials</legend>
-                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="manageAdminUsername">Username (Read-only)</label>
-                        <input type="text" id="manageAdminUsername" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="manageAdminPassword">New Password</label>
-                        <input type="password" id="manageAdminPassword" placeholder="Enter new password for Admin">
-                    </div>
-                </div>
-            </fieldset>
+            <fieldset><legend>User Credentials</legend><div class="form-row">
+                <div class="form-group"><label for="manageUserUsername">Username (Read-only)</label><input type="text" id="manageUserUsername" readonly></div>
+                <div class="form-group"><label for="manageUserPassword">New Password</label><div class="password-wrapper"><input type="password" id="manageUserPassword" placeholder="Enter new password"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('manageUserPassword', this)">👁️</button></div></div>
+            </div></fieldset>
+            <fieldset><legend>Administrator Credentials</legend><div class="form-row">
+                <div class="form-group"><label for="manageAdminUsername">Username (Read-only)</label><input type="text" id="manageAdminUsername" readonly></div>
+                <div class="form-group"><label for="manageAdminPassword">New Password</label><div class="password-wrapper"><input type="password" id="manageAdminPassword" placeholder="Enter new password"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('manageAdminPassword', this)">👁️</button></div></div>
+            </div></fieldset>
             <button class="btn btn-success" onclick="saveManagedCredentials()">Save Credential Changes</button>
             <div id="credentialUpdateStatus"></div>
         </div>
 
         <div id="statsSection" class="stats-section hidden">
-            <div class="stat-card"><div class="stat-number" id="totalEngines">0</div><div class="stat-label">Total Machines</div></div>
-            <div class="stat-card"><div class="stat-number" id="activeEngines">0</div><div class="stat-label">Active Machines</div></div>
-            <div class="stat-card"><div class="stat-number" id="maintenanceEngines">0</div><div class="stat-label">Maintenance Machines</div></div>
+            <div class="stat-card"><div class="stat-number" id="totalMachinesDisplay">0</div><div class="stat-label">Total Machines</div></div>
+            <div class="stat-card"><div class="stat-number" id="activeMachinesDisplay">0</div><div class="stat-label">Active Machines</div></div>
+            <div class="stat-card"><div class="stat-number" id="maintenanceMachinesDisplay">0</div><div class="stat-label">Maintenance Machines</div></div>
         </div>
         
-        <div id="adminSection" class="hidden">
+        <div id="adminFormSection" class="hidden">
             <div class="admin-form">
             <h3 style="margin-bottom: 20px; color: #3498db;">Add New Machine Data</h3>
-            <fieldset>
-                <legend>Core Identifiers</legend>
-                <div class="form-row">
-                    <div class="form-group"><label for="engineId">Machine ID * (System Unique ID)</label><input type="text" id="engineId" placeholder="e.g., MC-SYS-001"></div>
-                    <div class="form-group"><label for="panelNumber">Panel Number</label><input type="text" id="panelNumber" placeholder="Panel ID"></div>
-                </div>
+            <fieldset><legend>Core Identifiers</legend><div class="form-row">
+                <div class="form-group"><label for="machineIdInput">Machine ID *</label><input type="text" id="machineIdInput" placeholder="e.g., MC-SYS-001"></div>
+                <div class="form-group"><label for="panelNumberInput">Panel Number</label><input type="text" id="panelNumberInput" placeholder="Panel ID"></div>
+            </div></fieldset>
+            <fieldset><legend>Equipment Information</legend><div class="form-row">
+                <div class="form-group"><label for="equipTagNoInput">Equipment Tag No.</label><input type="text" id="equipTagNoInput" placeholder="Tag Number"></div>
+                <div class="form-group"><label for="equipDescInput">Equipment Description</label><input type="text" id="equipDescInput" placeholder="Description"></div>
+            </div></fieldset>
+            <fieldset><legend>Motor MCC Data</legend>
+                <div class="form-row"><div class="form-group"><label for="switchRoomNoInput">Switch Room No.</label><input type="text" id="switchRoomNoInput"></div><div class="form-group"><label for="mccInput">MCC</label><input type="text" id="mccInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="mccLocationInput">MCC Location</label><input type="text" id="mccLocationInput"></div><div class="form-group"><label for="mccTypicalInput">MCC Typical</label><input type="text" id="mccTypicalInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="profibusAddressInput">Profibus Address</label><input type="text" id="profibusAddressInput"></div><div class="form-group"><label for="runningAppInput">Running Application</label><input type="text" id="runningAppInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="powerKWmccInput">Power (KW)</label><input type="number" step="0.01" id="powerKWmccInput"></div><div class="form-group"><label for="currentAMPmccInput">Current (AMP)</label><input type="number" step="0.01" id="currentAMPmccInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="systemCabinetInput">System Cabinet</label><input type="text" id="systemCabinetInput"></div><div class="form-group"><label for="segmentNoInput">Segment No.</label><input type="text" id="segmentNoInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="redundantNoInput">Redundant No.</label><input type="text" id="redundantNoInput"></div><div class="form-group"><label for="voltagemccInput">Voltage</label><input type="text" id="voltagemccInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="powerCableInput">Power Cable</label><input type="text" id="powerCableInput"></div><div class="form-group"><label for="fieldControlCableInput">Field Control Cable</label><input type="text" id="fieldControlCableInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="rtdCableInput">RTD Cable</label><input type="text" id="rtdCableInput"></div><div class="form-group"><label for="heaterCableInput">Heater Cable</label><input type="text" id="heaterCableInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="estimatedLengthmccInput">Estimated Length</label><input type="text" id="estimatedLengthmccInput"></div><div class="form-group"><label for="mvCtRatiomccInput">MV CT Ratio</label><input type="text" id="mvCtRatiomccInput"></div></div>
+                <div class="form-row"><div class="form-group form-row-single"><label for="hhmFusesSibamccInput">HHM-Fuses SIBA</label><input type="text" id="hhmFusesSibamccInput"></div></div>
             </fieldset>
-            <fieldset>
-                <legend>Equipment Information</legend>
-                <div class="form-row">
-                    <div class="form-group"><label for="equipTagNo">Equipment Tag No.</label><input type="text" id="equipTagNo" placeholder="Tag Number"></div>
-                    <div class="form-group"><label for="equipDesc">Equipment Description</label><input type="text" id="equipDesc" placeholder="Description"></div>
-                </div>
+            <fieldset><legend>Motor Name Plate</legend>
+                <div class="form-row"><div class="form-group"><label for="motorDescriptionNpInput">Motor Description</label><input type="text" id="motorDescriptionNpInput"></div><div class="form-group"><label for="typeNpInput">Type</label><input type="text" id="typeNpInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="frameNpInput">Frame</label><input type="text" id="frameNpInput"></div><div class="form-group"><label for="flaNpInput">FLA</label><input type="text" id="flaNpInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="rpmNpInput">RPM</label><input type="number" id="rpmNpInput"></div><div class="form-group"><label for="hpKwNpInput">HP/KW</label><input type="text" id="hpKwNpInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="manufacturerNpInput">Manufacturer</label><input type="text" id="manufacturerNpInput"></div><div class="form-group"><label for="voltsNpInput">Volts</label><input type="text" id="voltsNpInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="couplingTypeNpInput">Coupling Type</label><input type="text" id="couplingTypeNpInput"></div><div class="form-group"><label for="mountingTypeNpInput">Mounting Type</label><input type="text" id="mountingTypeNpInput"></div></div>
+                <div class="form-row"><div class="form-group"><label for="jBoxSideNpInput">J.Box Side</label><input type="text" id="jBoxSideNpInput"></div><div class="form-group"><label for="deBearingNpInput">DE-Bearing</label><input type="text" id="deBearingNpInput"></div></div>
+                <div class="form-row"><div class="form-group form-row-single"><label for="ndeBearingNpInput">NDE-Bearing</label><input type="text" id="ndeBearingNpInput"></div></div>
+                <div class="form-row"><div class="form-group form-row-single"><label for="noteNpInput">Note (Name Plate)</label><textarea id="noteNpInput" rows="2"></textarea></div></div>
             </fieldset>
-            <fieldset>
-                <legend>Motor MCC Data</legend>
-                <div class="form-row">
-                    <div class="form-group"><label for="switchRoomNo">Switch Room No.</label><input type="text" id="switchRoomNo" placeholder="Switch Room"></div>
-                    <div class="form-group"><label for="mcc">MCC</label><input type="text" id="mcc" placeholder="MCC ID"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="mccLocation">MCC Location</label><input type="text" id="mccLocation" placeholder="Location of MCC"></div>
-                    <div class="form-group"><label for="mccTypical">MCC Typical</label><input type="text" id="mccTypical" placeholder="MCC Typical details"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="profibusAddress">Profibus Address</label><input type="text" id="profibusAddress" placeholder="Address"></div>
-                    <div class="form-group"><label for="runningApp">Running Application</label><input type="text" id="runningApp" placeholder="Application"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="powerKW_mcc">Power (KW)</label><input type="number" step="0.01" id="powerKW_mcc" placeholder="e.g., 7.5"></div>
-                    <div class="form-group"><label for="currentAMP_mcc">Current (AMP)</label><input type="number" step="0.01" id="currentAMP_mcc" placeholder="e.g., 15.2"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="systemCabinet">System Cabinet</label><input type="text" id="systemCabinet" placeholder="Cabinet ID"></div>
-                    <div class="form-group"><label for="segmentNo">Segment No.</label><input type="text" id="segmentNo" placeholder="Segment"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="redundantNo">Redundant No.</label><input type="text" id="redundantNo" placeholder="Redundancy Info"></div>
-                    <div class="form-group"><label for="voltage_mcc">Voltage</label><input type="text" id="voltage_mcc" placeholder="e.g., 400V"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="powerCable">Power Cable</label><input type="text" id="powerCable" placeholder="Cable Spec"></div>
-                    <div class="form-group"><label for="fieldControlCable">Field Control Cable</label><input type="text" id="fieldControlCable" placeholder="Cable Spec"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="rtdCable">RTD Cable</label><input type="text" id="rtdCable" placeholder="Cable Spec"></div>
-                    <div class="form-group"><label for="heaterCable">Heater Cable</label><input type="text" id="heaterCable" placeholder="Cable Spec"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="estimatedLength_mcc">Estimated Length</label><input type="text" id="estimatedLength_mcc" placeholder="e.g., 50m"></div>
-                    <div class="form-group"><label for="mvCtRatio_mcc">MV CT Ratio</label><input type="text" id="mvCtRatio_mcc" placeholder="Ratio"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group form-row-single"><label for="hhmFusesSiba_mcc">HHM-Fuses SIBA</label><input type="text" id="hhmFusesSiba_mcc" placeholder="Fuse Details"></div>
-                </div>
+            <fieldset><legend>Motor Replacements History</legend>
+                <div class="form-row"><div class="form-group"><label for="replacementDate1Input">Date 1</label><input type="date" id="replacementDate1Input"></div><div class="form-group"><label for="replacementDate2Input">Date 2</label><input type="date" id="replacementDate2Input"></div></div>
+                <div class="form-row"><div class="form-group"><label for="replacementDate3Input">Date 3</label><input type="date" id="replacementDate3Input"></div><div class="form-group"><label for="replacementDate4Input">Date 4</label><input type="date" id="replacementDate4Input"></div></div>
             </fieldset>
-            <fieldset>
-                <legend>Motor Name Plate</legend>
-                <div class="form-row">
-                    <div class="form-group"><label for="motorDescription_np">Motor Description</label><input type="text" id="motorDescription_np" placeholder="Description from plate"></div>
-                    <div class="form-group"><label for="type_np">Type</label><input type="text" id="type_np" placeholder="Motor Type"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="frame_np">Frame</label><input type="text" id="frame_np" placeholder="Frame Size"></div>
-                    <div class="form-group"><label for="fla_np">FLA (Full Load Amps)</label><input type="text" id="fla_np" placeholder="e.g., 14.8A"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="rpm_np">RPM</label><input type="number" id="rpm_np" placeholder="e.g., 1450"></div>
-                    <div class="form-group"><label for="hpKw_np">HP/KW</label><input type="text" id="hpKw_np" placeholder="e.g., 10HP/7.5KW"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="manufacturer_np">Manufacturer (MANFC)</label><input type="text" id="manufacturer_np" placeholder="Manufacturer"></div>
-                    <div class="form-group"><label for="volts_np">Volts</label><input type="text" id="volts_np" placeholder="e.g., 380-415V"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="couplingType_np">Coupling Type</label><input type="text" id="couplingType_np" placeholder="Type"></div>
-                    <div class="form-group"><label for="mountingType_np">Mounting Type</label><input type="text" id="mountingType_np" placeholder="Type"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="jBoxSide_np">J.Box Side</label><input type="text" id="jBoxSide_np" placeholder="e.g., Left"></div>
-                    <div class="form-group"><label for="deBearing_np">DE-Bearing</label><input type="text" id="deBearing_np" placeholder="Bearing Info"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group form-row-single"><label for="ndeBearing_np">NDE-Bearing</label><input type="text" id="ndeBearing_np" placeholder="Bearing Info"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group form-row-single"><label for="note_np">Note (Name Plate)</label><textarea id="note_np" rows="2" placeholder="Notes from name plate"></textarea></div>
-                </div>
+            <fieldset><legend>Breakers Related To</legend>
+                <p>Breaker 1:</p><div class="form-row"><div class="form-group"><label for="breakerEquipDesc1Input">Eq. Desc. 1</label><input type="text" id="breakerEquipDesc1Input"></div><div class="form-group"><label for="breakerEquipTag1Input">Eq. Tag 1</label><input type="text" id="breakerEquipTag1Input"></div><div class="form-group"><label for="breakerMccLocation1Input">MCC Loc. 1</label><input type="text" id="breakerMccLocation1Input"></div></div><hr>
+                <p>Breaker 2:</p><div class="form-row"><div class="form-group"><label for="breakerEquipDesc2Input">Eq. Desc. 2</label><input type="text" id="breakerEquipDesc2Input"></div><div class="form-group"><label for="breakerEquipTag2Input">Eq. Tag 2</label><input type="text" id="breakerEquipTag2Input"></div><div class="form-group"><label for="breakerMccLocation2Input">MCC Loc. 2</label><input type="text" id="breakerMccLocation2Input"></div></div>
             </fieldset>
-            <fieldset>
-                <legend>Motor Replacements History</legend>
-                <div class="form-row">
-                    <div class="form-group"><label for="replacementDate1">Date 1</label><input type="date" id="replacementDate1"></div>
-                    <div class="form-group"><label for="replacementDate2">Date 2</label><input type="date" id="replacementDate2"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="replacementDate3">Date 3</label><input type="date" id="replacementDate3"></div>
-                    <div class="form-group"><label for="replacementDate4">Date 4</label><input type="date" id="replacementDate4"></div>
-                </div>
+            <fieldset><legend>Additional Information (Listed)</legend>
+                <div class="form-row"><div class="form-group"><label for="motNoAddInput">MOT.No.</label><input type="text" id="motNoAddInput"></div><div class="form-group"><label for="assetNoAddInput">Asset No.</label><input type="text" id="assetNoAddInput"></div></div>
+                <div class="form-row"><div class="form-group form-row-single"><label for="hlpFeedbackNoteAddInput">HLP Feedback</label><textarea id="hlpFeedbackNoteAddInput" rows="2"></textarea></div></div>
             </fieldset>
-            <fieldset>
-                <legend>Breakers Related To</legend>
-                <p style="color:#bdc3c7; font-size:0.9em; margin-bottom:10px;">Breaker 1:</p>
-                <div class="form-row">
-                    <div class="form-group"><label for="breakerEquipDesc1">Equipment Description 1</label><input type="text" id="breakerEquipDesc1"></div>
-                    <div class="form-group"><label for="breakerEquipTag1">Equipment Tag 1</label><input type="text" id="breakerEquipTag1"></div>
-                    <div class="form-group"><label for="breakerMccLocation1">MCC Location 1</label><input type="text" id="breakerMccLocation1"></div>
-                </div>
-                <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
-                <p style="color:#bdc3c7; font-size:0.9em; margin-bottom:10px;">Breaker 2:</p>
-                <div class="form-row">
-                    <div class="form-group"><label for="breakerEquipDesc2">Equipment Description 2</label><input type="text" id="breakerEquipDesc2"></div>
-                    <div class="form-group"><label for="breakerEquipTag2">Equipment Tag 2</label><input type="text" id="breakerEquipTag2"></div>
-                    <div class="form-group"><label for="breakerMccLocation2">MCC Location 2</label><input type="text" id="breakerMccLocation2"></div>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>Additional Information (Listed)</legend>
-                <div class="form-row">
-                    <div class="form-group"><label for="motNo_add">MOT.No.</label><input type="text" id="motNo_add" placeholder="Motor Number"></div>
-                    <div class="form-group"><label for="assetNo_add">Asset No.</label><input type="text" id="assetNo_add" placeholder="Asset Number"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group form-row-single"><label for="hlpFeedbackNote_add">HLP Feedback / Note</label><textarea id="hlpFeedbackNote_add" rows="2" placeholder="Feedback or notes"></textarea></div>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>System & Maintenance</legend>
-                <div class="form-row">
-                    <div class="form-group"><label for="status">Status</label><select id="status"><option value="Active">Active</option><option value="Maintenance">Maintenance</option><option value="Inactive">Inactive</option></select></div>
-                </div>
-                <div class="form-group"><label for="notes_general">General Additional Notes</label><textarea id="notes_general" rows="3" placeholder="Any other general information"></textarea></div>
-                <div class="form-group"><label for="engineImage">Machine Image</label><input type="file" id="engineImage" accept="image/*" onchange="previewImage(this)"><div id="imagePreview" style="margin-top: 10px;"></div></div>
-            </fieldset>
-            <button class="btn btn-success" onclick="addEngine()">Add Machine Data</button>
-            <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+            <fieldset><legend>System & Maintenance</legend><div class="form-row">
+                <div class="form-group"><label for="statusInput">Status</label><select id="statusInput"><option value="Active">Active</option><option value="Maintenance">Maintenance</option><option value="Inactive">Inactive</option></select></div>
+            </div><div class="form-group"><label for="generalNotesInput">General Notes</label><textarea id="generalNotesInput" rows="3"></textarea></div>
+            <div class="form-group"><label for="machineImageInput">Machine Image</label><input type="file" id="machineImageInput" accept="image/*" onchange="previewImage(event)"><div id="imagePreview" style="margin-top: 10px;"></div></div></fieldset>
+            <button class="btn btn-success" onclick="handleAddMachine()">Add Machine Data</button>
+            <button class="btn btn-secondary" onclick="clearAdminForm()">Clear Form</button>
             </div>
         </div>
 
         <div class="search-section">
             <h3 style="margin-bottom: 15px;">Search Machines</h3>
             <div class="search-box">
-                <select id="searchField" onchange="searchEngines()">
-                    <option value="all">All Fields</option>
-                    <option value="id">Machine ID</option>
-                    <option value="equipTagNo">Eq. Tag No.</option>
-                    <option value="equipDesc">Eq. Description</option>
-                    <option value="panelNumber">Panel No.</option>
-                    <option value="mccLocation">MCC Location</option>
-                    <option value="motorDescription_np">Motor Desc. (NP)</option>
-                    <option value="manufacturer_np">Manufacturer (NP)</option>
-                    <option value="switchRoomNo">Switch Room</option>
-                    <option value="mcc">MCC ID</option>
-                    <option value="status">Status</option>
-                </select>
-                <input type="text" id="searchInput" placeholder="Enter search term..." onkeyup="searchEngines()">
-                <button class="btn" onclick="searchEngines()">Search</button>
-                <button class="btn btn-secondary" onclick="showAllEngines()">Show All</button>
+                <select id="searchFieldSelect" onchange="handleSearchMachines()"><option value="all">All Fields</option><option value="id">Machine ID</option><option value="equipTagNo">Eq. Tag No.</option><option value="equipDesc">Eq. Description</option><option value="panelNumber">Panel No.</option><option value="mccLocation">MCC Location</option><option value="motorDescription_np">Motor Desc. (NP)</option><option value="manufacturer_np">Manufacturer (NP)</option><option value="switchRoomNo">Switch Room</option><option value="mcc">MCC ID</option><option value="status">Status</option></select>
+                <input type="text" id="searchInputText" placeholder="Enter search term..." onkeyup="handleSearchMachines()">
+                <button class="btn" onclick="handleSearchMachines()">Search</button>
+                <button class="btn btn-secondary" onclick="handleShowAllMachines()">Show All</button>
             </div>
         </div>
-        <div id="engineResults">
-            <div id="noResults" class="no-results">Enter search terms to find machines.</div>
-            <div id="engineGrid" class="engine-grid"></div>
-        </div>
+        <div id="machinesGrid" class="engine-grid"></div>
+        <div id="noResultsDisplay" class="no-results hidden">No machines found.</div>
     </div>
 </div>
-<div id="engineModal" class="modal hidden">
+
+<div id="machineDetailModal" class="modal hidden">
     <div class="modal-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 id="modalTitle">Machine Details</h3>
-        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
-        </div>
-        <div id="modalContent" style="display: grid; gap: 10px;"></div>
+        <h3 id="modalTitleDisplay">Machine Details</h3><button class="btn btn-secondary" onclick="closeMachineDetailModal()">Close</button></div>
+        <div id="modalContentDisplay" style="display: grid; gap: 10px;"></div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-    import {
-        getFirestore, collection, addDoc, getDocs, doc, deleteDoc, setDoc // Ensure setDoc is imported if you plan to use Machine ID as Firestore Doc ID
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import {
-        getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyCGfxeiBzsJC3mvp5OQokdayGTMvQm79m0", // Replace with your actual API key
-      authDomain: "motor-inventory-77e1f.firebaseapp.com",
-      projectId: "motor-inventory-77e1f",
-      storageBucket: "motor-inventory-77e1f.appspot.com",
-      messagingSenderId: "896639039816",
-      appId: "1:896639039816:web:0c080c5cb6146f309e9b7d",
-      measurementId: "G-ZEEE17JMH5"
+      apiKey: "YOUR_API_KEY", //  REPLACE WITH YOUR FIREBASE CONFIG
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID" 
     };
 
     const app = initializeApp(firebaseConfig);
-    getAnalytics(app); // Call it to initialize
+    try { getAnalytics(app); } catch(e) { console.warn("Firebase Analytics init failed:", e.message); }
     const db = getFirestore(app);
     const storage = getStorage(app);
-    const enginesCollectionRef = collection(db, "engines"); // Firestore collection name
+    const machinesCollectionRef = collection(db, "machines");
 
-    let engines = []; // Local cache of machine data
-    let currentUser = '';
-    let isAdmin = false;    // Administrator role (can add/delete)
-    let isManager = false;  // Manager role (can manage credentials)
+    let localMachinesCache = [];
+    let currentLoggedInUser = '';
+    let isUserAdmin = false;
+    let isUserManager = false;
 
-    // --- Modifiable Credentials (defaults) ---
-    let userLoginDetails = { username: 'HLP', password: 'HLP' };
-    let adminLoginDetails = { username: 'HLP', password: 'MCC' };
-    const managerLoginDetails = { username: 'Manager', password: '421056' };
+    let userLoginCredentials = { username: 'HLP', password: 'HLP' };
+    let adminLoginCredentials = { username: 'HLP', password: 'MCC' };
+    const managerLoginCredentials = { username: 'Manager', password: '421056' };
 
-    // DOM Elements
-    const loginBackgroundSlideshow = document.getElementById('loginBackgroundSlideshow');
-    const userManagementBtn = document.getElementById('userManagementBtn');
-    const managerControlPanel = document.getElementById('managerControlPanel');
-    const loginError = document.getElementById('loginError'); // Define loginError globally for access
-
-    async function loadEnginesFromFirestore() {
-        try {
-            const querySnapshot = await getDocs(enginesCollectionRef);
-            engines = querySnapshot.docs.map(docSnapshot => ({ ...docSnapshot.data(), firestoreDocId: docSnapshot.id }));
-            console.log("Machine data loaded from Firestore:", engines);
-        } catch (error) {
-            console.error("Error loading machine data from Firestore:", error);
-            engines = [];
-            alert("Could not load machine data from the database. Please check the console for errors.");
-        }
-        updateStatistics();
-        displayEngines(engines);
-    }
-
-    function login() {
-        const usernameInput = document.getElementById('username').value;
-        const passwordInput = document.getElementById('password').value;
-        
-        isAdmin = false;
-        isManager = false;
-        loginError.style.display = 'none'; // Hide error initially
-
-        if (usernameInput === userLoginDetails.username && passwordInput === userLoginDetails.password) {
-            currentUser = userLoginDetails.username;
-            showMainApp();
-        } else if (usernameInput === adminLoginDetails.username && passwordInput === adminLoginDetails.password) {
-            currentUser = `${adminLoginDetails.username} (Admin)`;
-            isAdmin = true;
-            showMainApp();
-        } else if (usernameInput === managerLoginDetails.username && passwordInput === managerLoginDetails.password) {
-            currentUser = `${managerLoginDetails.username} (Manager)`;
-            isManager = true;
-            showMainApp();
+    let loginBackgroundEl, userManagementBtnEl, managerControlPanelEl, loginErrorDisplayEl, 
+        loginScreenEl, mainAppEl, adminFormSectionEl, statsSectionEl, currentUserDisplayEl, userRoleDisplayEl,
+        machinesGridEl, noResultsDisplayEl, machineDetailModalEl, modalTitleDisplayEl, modalContentDisplayEl,
+        searchInputTextEl, searchFieldSelectEl, imagePreviewEl;
+    
+    // --- Password Toggle Function ---
+    window.togglePasswordVisibility = function(fieldId, toggleButton) {
+        const passwordField = document.getElementById(fieldId);
+        if (!passwordField) return;
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleButton.textContent = "📖"; 
         } else {
-            loginError.textContent = 'Invalid credentials. Please try again.';
-            loginError.style.display = 'block';
-            setTimeout(() => { loginError.style.display = 'none'; }, 3000);
+            passwordField.type = "password";
+            toggleButton.textContent = "👁️";
         }
     }
-
-    async function showMainApp() {
-        document.getElementById('loginScreen').classList.add('hidden');
-        if (loginBackgroundSlideshow) loginBackgroundSlideshow.classList.add('hidden');
-        document.getElementById('mainApp').classList.remove('hidden');
-        document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'; // Restore app background
-        updateUserInterface();
-        await loadEnginesFromFirestore(); // Load data after UI update
+    
+    async function loadMachinesFromFirestore() {
+        try {
+            const querySnapshot = await getDocs(machinesCollectionRef);
+            localMachinesCache = querySnapshot.docs.map(docSnapshot => ({ ...docSnapshot.data(), firestoreDocId: docSnapshot.id }));
+        } catch (error) {
+            console.error("Error loading machines:", error); localMachinesCache = [];
+            alert("Could not load machine data. Check console.");
+        }
+        updateStatsDisplay();
+        renderMachinesGrid(localMachinesCache);
     }
 
-    function updateUserInterface() {
-        const userRoleEl = document.getElementById('userRole');
-        const currentUserSpan = document.getElementById('currentUser');
-        const adminFormSection = document.getElementById('adminSection'); // Renamed for clarity
-        const statsSection = document.getElementById('statsSection');
+    window.handleLogin = function() {
+        const usernameInput = document.getElementById('loginUsername').value;
+        const passwordInput = document.getElementById('loginPassword').value;
+        
+        isUserAdmin = false; isUserManager = false; loginErrorDisplayEl.style.display = 'none';
 
-        currentUserSpan.textContent = currentUser;
-        managerControlPanel.classList.add('hidden'); 
-        userManagementBtn.classList.add('hidden');
-        adminFormSection.classList.add('hidden'); 
-        statsSection.classList.add('hidden');
+        if (usernameInput === userLoginCredentials.username && passwordInput === userLoginCredentials.password) {
+            currentLoggedInUser = userLoginCredentials.username;
+        } else if (usernameInput === adminLoginCredentials.username && passwordInput === adminLoginCredentials.password) {
+            currentLoggedInUser = `${adminLoginCredentials.username} (Admin)`; isUserAdmin = true;
+        } else if (usernameInput === managerLoginCredentials.username && passwordInput === managerLoginCredentials.password) {
+            currentLoggedInUser = `${managerLoginCredentials.username} (Manager)`; isUserManager = true;
+        } else {
+            loginErrorDisplayEl.textContent = 'Invalid credentials.'; loginErrorDisplayEl.style.display = 'block';
+            setTimeout(() => { loginErrorDisplayEl.style.display = 'none'; }, 3000); return;
+        }
+        showMainApplicationView();
+    }
 
+    async function showMainApplicationView() {
+        loginScreenEl.classList.add('hidden');
+        if (loginBackgroundEl) loginBackgroundEl.classList.add('hidden');
+        mainAppEl.classList.remove('hidden');
+        document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';
+        updateUserInterfaceElements();
+        await loadMachinesFromFirestore();
+    }
 
-        if (isManager) {
-            userRoleEl.textContent = 'Manager';
-            userRoleEl.style.background = 'rgba(142, 68, 173, 0.2)'; 
-            userRoleEl.style.borderColor = '#8e44ad'; // Purple for Manager
-            statsSection.classList.remove('hidden'); 
-            userManagementBtn.classList.remove('hidden');
-        } else if (isAdmin) {
-            userRoleEl.textContent = 'Administrator';
-            userRoleEl.style.background = 'rgba(231,76,60,0.2)';
-            userRoleEl.style.borderColor = '#e74c3c'; // Red for Admin
-            adminFormSection.classList.remove('hidden');
-            statsSection.classList.remove('hidden');
-        } else { // Basic User
-            userRoleEl.textContent = 'User';
-            userRoleEl.style.background = 'rgba(52,152,219,0.2)';
-            userRoleEl.style.borderColor = '#3498db'; // Blue for User
-            // User sees search and results, but not stats or admin form
+    function updateUserInterfaceElements() {
+        currentUserDisplayEl.textContent = currentLoggedInUser;
+        managerControlPanelEl.classList.add('hidden'); userManagementBtnEl.classList.add('hidden');
+        adminFormSectionEl.classList.add('hidden'); statsSectionEl.classList.add('hidden');
+
+        if (isUserManager) {
+            userRoleDisplayEl.textContent = 'Manager'; userRoleDisplayEl.style.background = 'rgba(142, 68, 173, 0.2)'; userRoleDisplayEl.style.borderColor = '#8e44ad';
+            statsSectionEl.classList.remove('hidden'); userManagementBtnEl.classList.remove('hidden');
+        } else if (isUserAdmin) {
+            userRoleDisplayEl.textContent = 'Administrator'; userRoleDisplayEl.style.background = 'rgba(231,76,60,0.2)'; userRoleDisplayEl.style.borderColor = '#e74c3c';
+            adminFormSectionEl.classList.remove('hidden'); statsSectionEl.classList.remove('hidden');
+        } else { 
+            userRoleDisplayEl.textContent = 'User'; userRoleDisplayEl.style.background = 'rgba(52,152,219,0.2)'; userRoleDisplayEl.style.borderColor = '#3498db';
         }
     }
 
     window.toggleManagerPanel = function() {
-        if (!isManager) return;
-        managerControlPanel.classList.toggle('hidden');
-        if (!managerControlPanel.classList.contains('hidden')) {
-            document.getElementById('manageUserUsername').value = userLoginDetails.username;
-            document.getElementById('manageUserPassword').value = ''; 
-            document.getElementById('manageAdminUsername').value = adminLoginDetails.username;
-            document.getElementById('manageAdminPassword').value = ''; 
+        if (!isUserManager) return; managerControlPanelEl.classList.toggle('hidden');
+        if (!managerControlPanelEl.classList.contains('hidden')) {
+            document.getElementById('manageUserUsername').value = userLoginCredentials.username; document.getElementById('manageUserPassword').value = '';
+            document.getElementById('manageAdminUsername').value = adminLoginCredentials.username; document.getElementById('manageAdminPassword').value = '';
             document.getElementById('credentialUpdateStatus').textContent = '';
         }
     }
 
     window.saveManagedCredentials = function() {
-        if (!isManager) return;
+        if (!isUserManager) return;
         const newUserPass = document.getElementById('manageUserPassword').value;
         const newAdminPass = document.getElementById('manageAdminPassword').value;
         let updatesMade = false;
-
-        if (newUserPass) { userLoginDetails.password = newUserPass; updatesMade = true; }
-        if (newAdminPass) { adminLoginDetails.password = newAdminPass; updatesMade = true; }
-
+        if (newUserPass) { userLoginCredentials.password = newUserPass; updatesMade = true; }
+        if (newAdminPass) { adminLoginCredentials.password = newAdminPass; updatesMade = true; }
         const statusDiv = document.getElementById('credentialUpdateStatus');
-        if (updatesMade) {
-            statusDiv.textContent = 'Credentials updated successfully for this session!';
-            statusDiv.style.color = '#27ae60'; // Green for success
-        } else {
-            statusDiv.textContent = 'No new passwords entered.';
-            statusDiv.style.color = '#f39c12'; // Orange for no change
-        }
-        document.getElementById('manageUserPassword').value = ''; 
-        document.getElementById('manageAdminPassword').value = ''; 
+        statusDiv.textContent = updatesMade ? 'Credentials updated for session!' : 'No new passwords entered.';
+        statusDiv.style.color = updatesMade ? '#27ae60' : '#f39c12';
+        document.getElementById('manageUserPassword').value = ''; document.getElementById('manageAdminPassword').value = '';
         setTimeout(() => { statusDiv.textContent = ''; }, 4000);
     }
 
-    function updateStatistics() {
-        document.getElementById('totalEngines').textContent = engines.length;
-        document.getElementById('activeEngines').textContent = engines.filter(e => e.status === 'Active').length;
-        document.getElementById('maintenanceEngines').textContent = engines.filter(e => e.status === 'Maintenance').length;
+    function updateStatsDisplay() {
+        document.getElementById('totalMachinesDisplay').textContent = localMachinesCache.length;
+        document.getElementById('activeMachinesDisplay').textContent = localMachinesCache.filter(m => m.status === 'Active').length;
+        document.getElementById('maintenanceMachinesDisplay').textContent = localMachinesCache.filter(m => m.status === 'Maintenance').length;
     }
     
-    window.searchEngines = function() {
-        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-        const searchField = document.getElementById('searchField').value;
-
-        if (searchTerm === '') {
-             displayEngines(engines); // Show all if search term is empty, regardless of field
-             return;
-        }
-
-        const filteredEngines = engines.filter(engine => {
-            const checkField = (fieldValue) => fieldValue && String(fieldValue).toLowerCase().includes(searchTerm);
-
-            if (searchField === "all") {
-                return (checkField(engine.id)) || (checkField(engine.equipTagNo)) || (checkField(engine.equipDesc)) ||
-                       (checkField(engine.panelNumber)) || (checkField(engine.mccLocation)) ||
-                       (checkField(engine.motorDescription_np)) || (checkField(engine.manufacturer_np)) ||
-                       (checkField(engine.switchRoomNo)) || (checkField(engine.mcc)) || (checkField(engine.status));
-            } else {
-                return Object.prototype.hasOwnProperty.call(engine, searchField) && checkField(engine[searchField]);
+    window.handleSearchMachines = function() {
+        const searchTerm = searchInputTextEl.value.trim().toLowerCase();
+        const searchField = searchFieldSelectEl.value;
+        if (searchTerm === '') { renderMachinesGrid(localMachinesCache); return; }
+        const filtered = localMachinesCache.filter(machine => {
+            const check = (val) => val && String(val).toLowerCase().includes(searchTerm);
+            if (searchField === "all") { // Check a predefined set of important fields for "all"
+                 return (check(machine.id)) || (check(machine.equipTagNo)) || (check(machine.equipDesc)) ||
+                       (check(machine.panelNumber)) || (check(machine.mccLocation)) ||
+                       (check(machine.motorDescription_np)) || (check(machine.manufacturer_np)) ||
+                       (check(machine.status));
             }
+            return Object.prototype.hasOwnProperty.call(machine, searchField) && check(machine[searchField]);
         });
-        displayEngines(filteredEngines);
+        renderMachinesGrid(filtered);
     }
 
-    window.showAllEngines = function() {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('searchField').value = 'all';
-        displayEngines(engines);
+    window.handleShowAllMachines = function() {
+        searchInputTextEl.value = ''; searchFieldSelectEl.value = 'all';
+        renderMachinesGrid(localMachinesCache);
     }
 
-    function displayEngines(engineList) {
-        const engineGrid = document.getElementById('engineGrid');
-        const noResults = document.getElementById('noResults');
-        engineGrid.innerHTML = '';
-
-        if (engineList.length === 0) {
-            noResults.textContent = document.getElementById('searchInput').value.trim() !== '' ?
-                'No machines found matching your search criteria.' :
-                'No machines currently in inventory. Add new machines via the form if you are an Administrator.';
-            noResults.style.display = 'block';
-            return;
+    function renderMachinesGrid(machinesToList) {
+        machinesGridEl.innerHTML = '';
+        if (machinesToList.length === 0) {
+            noResultsDisplayEl.textContent = searchInputTextEl.value.trim() !== '' ? 'No machines found matching criteria.' : 'No machines in inventory.';
+            noResultsDisplayEl.classList.remove('hidden'); return;
         }
-        noResults.style.display = 'none';
-
-        engineList.forEach(engine => {
-            const card = document.createElement('div');
-            card.className = 'engine-card';
+        noResultsDisplayEl.classList.add('hidden');
+        machinesToList.forEach(machine => {
+            const card = document.createElement('div'); card.className = 'engine-card';
+            const clickableArea = document.createElement('div'); clickableArea.className = 'engine-card-clickable-area';
+            if (!isUserAdmin) { clickableArea.onclick = () => showMachineDetailView(machine.id); }
             
-            const clickableArea = document.createElement('div');
-            clickableArea.className = 'engine-card-clickable-area';
-            if (!isAdmin) { // Make area clickable for details only if not admin (admin uses button)
-                 clickableArea.onclick = () => showEngineDetails(engine.id, engine.firestoreDocId);
-            }
-
-            const displayLocation = engine.mccLocation || engine.location || 'N/A';
-            const displayPower = engine.powerKW_mcc !== undefined ? engine.powerKW_mcc : (engine.power !== undefined ? engine.power : 'N/A');
-
             clickableArea.innerHTML = `
-                <div class="engine-id">${engine.id || 'N/A'} ${engine.equipTagNo ? `(${engine.equipTagNo})` : ''}</div>
-                <div class="engine-image">
-                    ${engine.image ? `<img src="${engine.image}" alt="Machine Image">` : '📷 No Image'}
-                </div>
+                <div class="engine-id">${machine.id || 'N/A'} ${machine.equipTagNo ? `(${machine.equipTagNo})` : ''}</div>
+                <div class="engine-image">${machine.image ? `<img src="${machine.image}" alt="Machine Image">` : '📷 No Image'}</div>
                 <div class="engine-info">
-                    <div class="info-item"><div class="info-label">Description</div><div class="info-value">${engine.equipDesc || 'N/A'}</div></div>
-                    <div class="info-item"><div class="info-label">Location</div><div class="info-value">${displayLocation}</div></div>
-                    <div class="info-item"><div class="info-label">Power</div><div class="info-value">${displayPower !== 'N/A' ? displayPower + ' kW' : 'N/A'}</div></div>
-                    <div class="info-item"><div class="info-label">Status</div><div class="info-value" style="color: ${getStatusColor(engine.status)}">${engine.status || 'N/A'}</div></div>
-                </div>
-            `;
+                    <div class="info-item"><div class="info-label">Description</div><div class="info-value">${machine.equipDesc || 'N/A'}</div></div>
+                    <div class="info-item"><div class="info-label">Location</div><div class="info-value">${machine.mccLocation || 'N/A'}</div></div>
+                    <div class="info-item"><div class="info-label">Status</div><div class="info-value" style="color: ${getMachineStatusColor(machine.status)}">${machine.status || 'N/A'}</div></div>
+                </div>`;
             card.appendChild(clickableArea);
-            
-            if (isAdmin) {
-                const actionsDiv = document.createElement('div');
-                actionsDiv.className = 'engine-card-actions';
-                actionsDiv.innerHTML = `
-                    <button class="btn btn-secondary btn-small" onclick="showEngineDetails('${engine.id}', '${engine.firestoreDocId}')">Details</button>
-                    <button class="btn btn-danger btn-small" onclick="promptDeleteMachine('${engine.id}', '${engine.firestoreDocId}')">Delete</button>
-                `;
+            if (isUserAdmin) {
+                const actionsDiv = document.createElement('div'); actionsDiv.className = 'engine-card-actions';
+                actionsDiv.innerHTML = `<button class="btn btn-secondary btn-small" onclick="showMachineDetailView('${machine.id}')">Details</button><button class="btn btn-danger btn-small" onclick="promptDeleteMachine('${machine.id}', '${machine.firestoreDocId}')">Delete</button>`;
                 card.appendChild(actionsDiv);
             }
-            engineGrid.appendChild(card);
+            machinesGridEl.appendChild(card);
         });
     }
 
-    function getStatusColor(status) {
-        switch(status) { case 'Active': return '#27ae60'; case 'Maintenance': return '#f39c12'; case 'Inactive': return '#e74c3c'; default: return '#7f8c8d'; }
-    }
+    function getMachineStatusColor(status) { switch(status) { case 'Active': return '#27ae60'; case 'Maintenance': return '#f39c12'; case 'Inactive': return '#e74c3c'; default: return '#7f8c8d'; }}
+    function formatModalDetailItem(label, value, isHtml = false) { if (value === undefined || value === null || String(value).trim() === '') return ''; return `<div class="info-item"><div class="info-label">${label}</div><div class="info-value">${isHtml ? value : String(value).replace(/\n/g, '<br>')}</div></div>`;}
 
-    function formatModalItem(label, value, isHtml = false) {
-        if (value === undefined || value === null || String(value).trim() === '') return '';
-        return `<div class="info-item"><div class="info-label">${label}</div><div class="info-value">${isHtml ? value : String(value).replace(/\n/g, '<br>')}</div></div>`;
-    }
-
-    window.showEngineDetails = function(engineSystemId, firestoreDocId) { // firestoreDocId available if needed
-        const engine = engines.find(e => e.id === engineSystemId);
-        if (!engine) { alert("Machine details could not be found."); return; }
-        
-        const modal = document.getElementById('engineModal');
-        document.getElementById('modalTitle').textContent = `Machine Details - ${engine.id}`;
-        const modalContent = document.getElementById('modalContent');
-        
+    window.showMachineDetailView = function(machineId) {
+        const machine = localMachinesCache.find(m => m.id === machineId);
+        if (!machine) { alert("Machine details not found."); return; }
+        modalTitleDisplayEl.textContent = `Machine Details - ${machine.id}`;
         let contentHtml = '';
-        if (engine.image) { contentHtml += `<div style="text-align: center; margin-bottom:15px;"><img src="${engine.image}" alt="Machine Image" style="max-width: 100%; max-height: 250px; border-radius: 8px;"></div>`; }
-
+        if (machine.image) { contentHtml += `<div style="text-align: center; margin-bottom:15px;"><img src="${machine.image}" alt="Machine Image" style="max-width: 100%; max-height: 250px; border-radius: 8px;"></div>`; }
+        
+        // Manually list fields to control order and formatting, and to exclude some (like firestoreDocId)
         contentHtml += `<div class="modal-section-title">Core Identifiers</div>`;
-        contentHtml += formatModalItem('Machine ID (System)', engine.id);
-        contentHtml += formatModalItem('Panel Number', engine.panelNumber);
-
+        contentHtml += formatModalDetailItem('Machine ID', machine.id);
+        contentHtml += formatModalDetailItem('Panel Number', machine.panelNumber);
         contentHtml += `<div class="modal-section-title">Equipment Information</div>`;
-        contentHtml += formatModalItem('Equipment Tag No.', engine.equipTagNo);
-        contentHtml += formatModalItem('Equipment Description', engine.equipDesc);
-
+        contentHtml += formatModalDetailItem('Equipment Tag No.', machine.equipTagNo);
+        contentHtml += formatModalDetailItem('Equipment Description', machine.equipDesc);
         contentHtml += `<div class="modal-section-title">Motor MCC Data</div>`;
-        contentHtml += formatModalItem('Switch Room No.', engine.switchRoomNo);
-        contentHtml += formatModalItem('MCC', engine.mcc);
-        contentHtml += formatModalItem('MCC Location', engine.mccLocation);
-        contentHtml += formatModalItem('MCC Typical', engine.mccTypical);
-        contentHtml += formatModalItem('Profibus Address', engine.profibusAddress);
-        contentHtml += formatModalItem('Running Application', engine.runningApp);
-        contentHtml += formatModalItem('Power (KW - MCC)', engine.powerKW_mcc);
-        contentHtml += formatModalItem('Current (AMP - MCC)', engine.currentAMP_mcc);
-        contentHtml += formatModalItem('System Cabinet', engine.systemCabinet);
-        contentHtml += formatModalItem('Segment No.', engine.segmentNo);
-        contentHtml += formatModalItem('Redundant No.', engine.redundantNo);
-        contentHtml += formatModalItem('Voltage (MCC)', engine.voltage_mcc);
-        contentHtml += formatModalItem('Power Cable', engine.powerCable);
-        contentHtml += formatModalItem('Field Control Cable', engine.fieldControlCable);
-        contentHtml += formatModalItem('RTD Cable', engine.rtdCable);
-        contentHtml += formatModalItem('Heater Cable', engine.heaterCable);
-        contentHtml += formatModalItem('Estimated Length', engine.estimatedLength_mcc);
-        contentHtml += formatModalItem('MV CT Ratio', engine.mvCtRatio_mcc);
-        contentHtml += formatModalItem('HHM-Fuses SIBA', engine.hhmFusesSiba_mcc);
-
+        contentHtml += formatModalDetailItem('Switch Room No.', machine.switchRoomNo);
+        contentHtml += formatModalDetailItem('MCC', machine.mcc);
+        contentHtml += formatModalDetailItem('MCC Location', machine.mccLocation);
+        contentHtml += formatModalDetailItem('MCC Typical', machine.mccTypical);
+        contentHtml += formatModalDetailItem('Profibus Address', machine.profibusAddress);
+        contentHtml += formatModalDetailItem('Running Application', machine.runningApp);
+        contentHtml += formatModalDetailItem('Power (KW)', machine.powerKW_mcc); // Note: property names from your form
+        contentHtml += formatModalDetailItem('Current (AMP)', machine.currentAMP_mcc);
+        contentHtml += formatModalDetailItem('System Cabinet', machine.systemCabinet);
+        // ... Add ALL other MCC Data fields
         contentHtml += `<div class="modal-section-title">Motor Name Plate</div>`;
-        contentHtml += formatModalItem('Motor Description', engine.motorDescription_np);
-        contentHtml += formatModalItem('Type', engine.type_np);
-        contentHtml += formatModalItem('Frame', engine.frame_np);
-        contentHtml += formatModalItem('FLA', engine.fla_np);
-        contentHtml += formatModalItem('RPM', engine.rpm_np);
-        contentHtml += formatModalItem('HP/KW', engine.hpKw_np);
-        contentHtml += formatModalItem('Manufacturer (MANFC)', engine.manufacturer_np);
-        contentHtml += formatModalItem('Volts (Name Plate)', engine.volts_np);
-        contentHtml += formatModalItem('Coupling Type', engine.couplingType_np);
-        contentHtml += formatModalItem('Mounting Type', engine.mountingType_np);
-        contentHtml += formatModalItem('J.Box Side', engine.jBoxSide_np);
-        contentHtml += formatModalItem('DE-Bearing', engine.deBearing_np);
-        contentHtml += formatModalItem('NDE-Bearing', engine.ndeBearing_np);
-        contentHtml += formatModalItem('Note (Name Plate)', engine.note_np);
-
-        contentHtml += `<div class="modal-section-title">Motor Replacements History</div>`;
-        contentHtml += formatModalItem('Replacement Date 1', engine.replacementDate1);
-        contentHtml += formatModalItem('Replacement Date 2', engine.replacementDate2);
-        contentHtml += formatModalItem('Replacement Date 3', engine.replacementDate3);
-        contentHtml += formatModalItem('Replacement Date 4', engine.replacementDate4);
-
+        contentHtml += formatModalDetailItem('Motor Description', machine.motorDescription_np);
+        contentHtml += formatModalDetailItem('Type', machine.type_np);
+        // ... Add ALL other Name Plate fields
+        contentHtml += `<div class="modal-section-title">Replacements History</div>`;
+        contentHtml += formatModalDetailItem('Date 1', machine.replacementDate1);
+        // ... Add other replacement dates
         contentHtml += `<div class="modal-section-title">Breakers Related To</div>`;
-        contentHtml += formatModalItem('Breaker 1: Equip. Desc.', engine.breakerEquipDesc1);
-        contentHtml += formatModalItem('Breaker 1: Equip. Tag', engine.breakerEquipTag1);
-        contentHtml += formatModalItem('Breaker 1: MCC Location', engine.breakerMccLocation1);
-        contentHtml += formatModalItem('Breaker 2: Equip. Desc.', engine.breakerEquipDesc2);
-        contentHtml += formatModalItem('Breaker 2: Equip. Tag', engine.breakerEquipTag2);
-        contentHtml += formatModalItem('Breaker 2: MCC Location', engine.breakerMccLocation2);
-
-        contentHtml += `<div class="modal-section-title">Additional Information (Listed)</div>`;
-        contentHtml += formatModalItem('MOT.No.', engine.motNo_add);
-        contentHtml += formatModalItem('Asset No.', engine.assetNo_add);
-        contentHtml += formatModalItem('HLP Feedback / Note', engine.hlpFeedbackNote_add);
-
+        // ... Add breaker info
+        contentHtml += `<div class="modal-section-title">Additional Info</div>`;
+        // ... Add MOT.No, Asset No, etc.
         contentHtml += `<div class="modal-section-title">System & Maintenance</div>`;
-        contentHtml += formatModalItem('Status', `<span style="color: ${getStatusColor(engine.status)}">${engine.status}</span>`, true);
-        contentHtml += formatModalItem('General Additional Notes', engine.notes_general);
+        contentHtml += formatModalDetailItem('Status', `<span style="color: ${getMachineStatusColor(machine.status)}">${machine.status}</span>`, true);
+        contentHtml += formatModalDetailItem('General Notes', machine.notes_general);
+
+        modalContentDisplayEl.innerHTML = contentHtml;
+        machineDetailModalEl.classList.remove('hidden'); machineDetailModalEl.style.display = 'flex';
+    };
+    window.closeMachineDetailModal = function() { machineDetailModalEl.classList.add('hidden');};
+    window.previewImage = function(event) { if (event.target.files && event.target.files[0]) { const reader = new FileReader(); reader.onload = (e) => { imagePreviewEl.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 8px;">`; }; reader.readAsDataURL(event.target.files[0]); } else { imagePreviewEl.innerHTML = ''; }};
+    
+    window.handleAddMachine = async function() {
+        if (!isUserAdmin) { alert('Access denied.'); return; }
+        const machineId = document.getElementById('machineIdInput').value.trim();
+        if (!machineId) { alert('Machine ID required.'); return; }
+        if (localMachinesCache.some(m => m.id === machineId)) { alert('Machine ID exists.'); return; }
         
-        modalContent.innerHTML = contentHtml;
-        modal.classList.remove('hidden');
-        modal.style.display = 'flex'; // Ensure modal is visible
-    }
+        const getVal = id => document.getElementById(id)?.value.trim() || ''; // Helper to get form values
+        const getNum = id => parseFloat(document.getElementById(id)?.value) || null;
+        const getInt = id => parseInt(document.getElementById(id)?.value) || null;
 
-    window.closeModal = function() {
-        document.getElementById('engineModal').classList.add('hidden');
-    }
-
-    window.previewImage = function(input) {
-        const preview = document.getElementById('imagePreview');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) { preview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 8px;">`; };
-            reader.readAsDataURL(input.files[0]);
-        } else { preview.innerHTML = ''; }
-    }
-
-    window.addEngine = async function() {
-        if (!isAdmin) { alert('Access denied. Administrator privileges required to add machines.'); return; }
-        
-        const engineIdValue = document.getElementById('engineId').value.trim();
-        if (!engineIdValue) { alert('Machine ID (System Unique ID) is required.'); return; }
-        if (engines.some(e => e.id === engineIdValue)) { alert('Machine ID already exists. Please use a different ID.'); return; }
-
-        const imageFile = document.getElementById('engineImage').files[0];
-        
-        const getFieldValue = (id) => document.getElementById(id).value.trim();
-        const getFloatValue = (id) => parseFloat(document.getElementById(id).value) || null;
-        const getIntValue = (id) => parseInt(document.getElementById(id).value) || null;
-
-        const newMachineData = {
-            id: engineIdValue,
-            panelNumber: getFieldValue('panelNumber'), equipTagNo: getFieldValue('equipTagNo'), equipDesc: getFieldValue('equipDesc'),
-            switchRoomNo: getFieldValue('switchRoomNo'), mcc: getFieldValue('mcc'), mccLocation: getFieldValue('mccLocation'),
-            mccTypical: getFieldValue('mccTypical'), profibusAddress: getFieldValue('profibusAddress'), runningApp: getFieldValue('runningApp'),
-            powerKW_mcc: getFloatValue('powerKW_mcc'), currentAMP_mcc: getFloatValue('currentAMP_mcc'), systemCabinet: getFieldValue('systemCabinet'),
-            segmentNo: getFieldValue('segmentNo'), redundantNo: getFieldValue('redundantNo'), voltage_mcc: getFieldValue('voltage_mcc'),
-            powerCable: getFieldValue('powerCable'), fieldControlCable: getFieldValue('fieldControlCable'), rtdCable: getFieldValue('rtdCable'),
-            heaterCable: getFieldValue('heaterCable'), estimatedLength_mcc: getFieldValue('estimatedLength_mcc'), mvCtRatio_mcc: getFieldValue('mvCtRatio_mcc'),
-            hhmFusesSiba_mcc: getFieldValue('hhmFusesSiba_mcc'), motorDescription_np: getFieldValue('motorDescription_np'), type_np: getFieldValue('type_np'),
-            frame_np: getFieldValue('frame_np'), fla_np: getFieldValue('fla_np'), rpm_np: getIntValue('rpm_np'), hpKw_np: getFieldValue('hpKw_np'),
-            manufacturer_np: getFieldValue('manufacturer_np'), volts_np: getFieldValue('volts_np'), couplingType_np: getFieldValue('couplingType_np'),
-            mountingType_np: getFieldValue('mountingType_np'), jBoxSide_np: getFieldValue('jBoxSide_np'), deBearing_np: getFieldValue('deBearing_np'),
-            ndeBearing_np: getFieldValue('ndeBearing_np'), note_np: getFieldValue('note_np'),
-            replacementDate1: getFieldValue('replacementDate1'), replacementDate2: getFieldValue('replacementDate2'),
-            replacementDate3: getFieldValue('replacementDate3'), replacementDate4: getFieldValue('replacementDate4'),
-            breakerEquipDesc1: getFieldValue('breakerEquipDesc1'), breakerEquipTag1: getFieldValue('breakerEquipTag1'), breakerMccLocation1: getFieldValue('breakerMccLocation1'),
-            breakerEquipDesc2: getFieldValue('breakerEquipDesc2'), breakerEquipTag2: getFieldValue('breakerEquipTag2'), breakerMccLocation2: getFieldValue('breakerMccLocation2'),
-            motNo_add: getFieldValue('motNo_add'), assetNo_add: getFieldValue('assetNo_add'), hlpFeedbackNote_add: getFieldValue('hlpFeedbackNote_add'),
-            status: document.getElementById('status').value, notes_general: getFieldValue('notes_general'), image: '' // Image URL will be set after upload
+        const newMachine = { 
+            id: machineId, 
+            panelNumber: getVal('panelNumberInput'), equipTagNo: getVal('equipTagNoInput'), equipDesc: getVal('equipDescInput'),
+            switchRoomNo: getVal('switchRoomNoInput'), mcc: getVal('mccInput'), mccLocation: getVal('mccLocationInput'),
+            mccTypical: getVal('mccTypicalInput'), profibusAddress: getVal('profibusAddressInput'), runningApp: getVal('runningAppInput'),
+            powerKW_mcc: getNum('powerKWmccInput'), currentAMP_mcc: getNum('currentAMPmccInput'), systemCabinet: getVal('systemCabinetInput'),
+            segmentNo: getVal('segmentNoInput'), redundantNo: getVal('redundantNoInput'), voltage_mcc: getVal('voltagemccInput'),
+            powerCable: getVal('powerCableInput'), fieldControlCable: getVal('fieldControlCableInput'), rtdCable: getVal('rtdCableInput'),
+            heaterCable: getVal('heaterCableInput'), estimatedLength_mcc: getVal('estimatedLengthmccInput'), mvCtRatio_mcc: getVal('mvCtRatiomccInput'),
+            hhmFusesSiba_mcc: getVal('hhmFusesSibamccInput'), 
+            motorDescription_np: getVal('motorDescriptionNpInput'), type_np: getVal('typeNpInput'), frame_np: getVal('frameNpInput'),
+            fla_np: getVal('flaNpInput'), rpm_np: getInt('rpmNpInput'), hpKw_np: getVal('hpKwNpInput'),
+            manufacturer_np: getVal('manufacturerNpInput'), volts_np: getVal('voltsNpInput'), couplingType_np: getVal('couplingTypeNpInput'),
+            mountingType_np: getVal('mountingTypeNpInput'), jBoxSide_np: getVal('jBoxSideNpInput'), deBearing_np: getVal('deBearingNpInput'),
+            ndeBearing_np: getVal('ndeBearingNpInput'), note_np: getVal('noteNpInput'),
+            replacementDate1: getVal('replacementDate1Input'), replacementDate2: getVal('replacementDate2Input'),
+            replacementDate3: getVal('replacementDate3Input'), replacementDate4: getVal('replacementDate4Input'),
+            breakerEquipDesc1: getVal('breakerEquipDesc1Input'), breakerEquipTag1: getVal('breakerEquipTag1Input'), breakerMccLocation1: getVal('breakerMccLocation1Input'),
+            breakerEquipDesc2: getVal('breakerEquipDesc2Input'), breakerEquipTag2: getVal('breakerEquipTag2Input'), breakerMccLocation2: getVal('breakerMccLocation2Input'),
+            motNo_add: getVal('motNoAddInput'), assetNo_add: getVal('assetNoAddInput'), hlpFeedbackNote_add: getVal('hlpFeedbackNoteAddInput'),
+            status: document.getElementById('statusInput').value, notes_general: getVal('generalNotesInput'), image: ''
         };
-
-        const saveDataToFirestore = async (machineDataWithImage) => {
-            try {
-                // Using Machine ID as Firestore Document ID for easier reference and uniqueness enforcement.
-                // This means Engine ID must be unique.
-                const docRef = doc(db, "engines", machineDataWithImage.id);
-                await setDoc(docRef, machineDataWithImage); // Use setDoc to specify custom ID
-
-                // const docRef = await addDoc(enginesCollectionRef, machineDataWithImage); // Use this for auto-generated ID
-                console.log("Machine added to Firestore with ID: ", machineDataWithImage.id);
-                await loadEnginesFromFirestore(); 
-                clearForm();
-                alert('Machine data added successfully!');
-                document.getElementById('searchInput').value = machineDataWithImage.id; 
-                searchEngines();
-            } catch (error) {
-                console.error("Error adding machine data to Firestore: ", error);
-                alert('Error adding machine data to database. Check console for details. Ensure Machine ID is unique.');
-            }
+        
+        const imageFile = document.getElementById('machineImageInput').files[0];
+        const saveData = async (dataToSave) => {
+            try { await setDoc(doc(db, "machines", dataToSave.id), dataToSave); await loadMachinesFromFirestore(); clearAdminForm(); alert('Machine added successfully!'); searchInputTextEl.value = dataToSave.id; handleSearchMachines(); }
+            catch (e) { console.error("Add machine error:", e); alert('Failed to add machine. Ensure Machine ID is unique.'); }
         };
 
         if (imageFile) {
-            const imageStoragePath = `machine_images/${newMachineData.id}-${Date.now()}-${imageFile.name}`;
-            const fileRef = storageRef(storage, imageStoragePath);
+            const filePath = `machine_images/${machineId}-${Date.now()}-${imageFile.name}`;
+            const fileRef = storageRef(storage, filePath);
             const uploadTask = uploadBytesResumable(fileRef, imageFile);
-            uploadTask.on('state_changed',
-                (snapshot) => { console.log('Upload is ' + (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + '% done'); },
-                (error) => {
-                    console.error("Image upload error: ", error);
-                    alert('Image upload failed. Saving data without image. Error: ' + error.message);
-                    saveDataToFirestore(newMachineData); // Save data without image URL
-                },
-                async () => {
-                    try {
-                        newMachineData.image = await getDownloadURL(uploadTask.snapshot.ref);
-                        console.log('File available at', newMachineData.image);
-                        await saveDataToFirestore(newMachineData);
-                    } catch (e) {
-                        console.error("Error getting download URL: ", e);
-                        alert('Failed to get image URL after upload. Saving data without image.');
-                        await saveDataToFirestore(newMachineData); 
-                    }
+            uploadTask.on('state_changed', 
+                (s) => { console.log(`Upload: ${ (s.bytesTransferred/s.totalBytes*100).toFixed(0) }%`); }, 
+                (err) => { console.error(err); alert("Image upload failed. Saving without image."); saveData(newMachine);}, 
+                async () => { 
+                    try { newMachine.image = await getDownloadURL(uploadTask.snapshot.ref); await saveData(newMachine); }
+                    catch(e) { console.error(e); alert("Failed to get image URL. Saving without image."); await saveData(newMachine); }
                 }
             );
-        } else {
-            await saveDataToFirestore(newMachineData); // No image to upload
-        }
-    }
+        } else { await saveData(newMachine); }
+    };
+    window.clearAdminForm = function() { const form = adminFormSectionEl.querySelector('.admin-form'); if(form) form.reset(); if(imagePreviewEl) imagePreviewEl.innerHTML = ''; };
+    
+    window.promptDeleteMachine = function(machineId, firestoreDocId) { if (!isUserAdmin) { alert("Access Denied."); return; } if (confirm(`Delete machine ${machineId}? This cannot be undone.`)) { deleteMachineFromDb(firestoreDocId); }};
+    async function deleteMachineFromDb(firestoreDocId) { if (!isUserAdmin) return; try { await deleteDoc(doc(db, "machines", firestoreDocId)); await loadMachinesFromFirestore(); alert('Machine deleted successfully.'); } catch (e) { console.error("Delete error:", e); alert('Failed to delete machine.'); }};
+    
+    window.handleLogout = function() {
+        mainAppEl.classList.add('hidden'); managerControlPanelEl.classList.add('hidden'); userManagementBtnEl.classList.add('hidden');
+        loginScreenEl.classList.remove('hidden'); if (loginBackgroundEl) loginBackgroundEl.classList.remove('hidden');
+        document.body.style.background = ''; document.getElementById('loginUsername').value = ''; document.getElementById('loginPassword').value = '';
+        currentLoggedInUser = ''; isUserAdmin = false; isUserManager = false; localMachinesCache = [];
+        if(typeof updateStatsDisplay === "function") updateStatsDisplay(); 
+        if(typeof renderMachinesGrid === "function") renderMachinesGrid([]);
+    };
 
-    window.clearForm = function() {
-        const form = document.querySelector('.admin-form');
-        if (form) {
-            form.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], input[type="file"], textarea').forEach(input => input.value = '');
-            form.querySelectorAll('select').forEach(select => select.selectedIndex = 0); // Reset selects to first option
-        }
-        document.getElementById('imagePreview').innerHTML = '';
-    }
-
-    window.promptDeleteMachine = function(machineId, firestoreDocId) {
-        if (!isAdmin) { alert("Access Denied. Administrator privileges required."); return; }
-        if (confirm(`Are you sure you want to delete machine ${machineId}? This action cannot be undone.`)) {
-            deleteMachine(firestoreDocId);
-        }
-    }
-
-    async function deleteMachine(firestoreDocId) { // Not exposed to window, called by promptDeleteMachine
-        if (!isAdmin) { return; } // Double check, though promptDeleteMachine already does.
-        try {
-            const machineDocRef = doc(db, "engines", firestoreDocId);
-            await deleteDoc(machineDocRef);
-            console.log("Machine deleted from Firestore:", firestoreDocId);
-            await loadEnginesFromFirestore(); 
-            alert('Machine deleted successfully!');
-        } catch (error) {
-            console.error("Error deleting machine from Firestore: ", error);
-            alert('Error deleting machine. Check console for details.');
-        }
-    }
-
-    window.logout = function() {
-        document.getElementById('mainApp').classList.add('hidden');
-        if (managerControlPanel) managerControlPanel.classList.add('hidden');
-        if (userManagementBtn) userManagementBtn.classList.add('hidden');
-        
-        document.getElementById('loginScreen').classList.remove('hidden');
-        if (loginBackgroundSlideshow) loginBackgroundSlideshow.classList.remove('hidden');
-        document.body.style.background = ''; // Let slideshow take over or default body bg for login
-        
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-        currentUser = ''; isAdmin = false; isManager = false;
-        engines = []; // Clear local cache on logout
-        updateStatistics(); 
-        displayEngines([]); 
-    }
-
-    // Initial Setup on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function() {
-        const loginScreenElement = document.getElementById('loginScreen');
-        if (loginScreenElement) {
-            loginScreenElement.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !loginScreenElement.classList.contains('hidden')) {
-                    const activeEl = document.activeElement;
-                    if ((activeEl.tagName === 'INPUT' || activeEl.tagName === 'BUTTON') && loginScreenElement.contains(activeEl)) {
-                        login();
-                    }
-                }
-            });
-        }
-        const engineModalElement = document.getElementById('engineModal');
-        if (engineModalElement) {
-            engineModalElement.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-        }
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && engineModalElement && !engineModalElement.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
+        loginBackgroundEl = document.getElementById('loginBackgroundSlideshow');
+        userManagementBtnEl = document.getElementById('userManagementBtn');
+        managerControlPanelEl = document.getElementById('managerControlPanel');
+        loginErrorDisplayEl = document.getElementById('loginErrorDisplay');
+        loginScreenEl = document.getElementById('loginScreen');
+        mainAppEl = document.getElementById('mainApp');
+        adminFormSectionEl = document.getElementById('adminFormSection');
+        statsSectionEl = document.getElementById('statsSection');
+        currentUserDisplayEl = document.getElementById('currentUserDisplay');
+        userRoleDisplayEl = document.getElementById('userRoleDisplay');
+        machinesGridEl = document.getElementById('machinesGrid');
+        noResultsDisplayEl = document.getElementById('noResultsDisplay');
+        machineDetailModalEl = document.getElementById('machineDetailModal');
+        modalTitleDisplayEl = document.getElementById('modalTitleDisplay');
+        modalContentDisplayEl = document.getElementById('modalContentDisplay');
+        searchInputTextEl = document.getElementById('searchInputText');
+        searchFieldSelectEl = document.getElementById('searchFieldSelect');
+        imagePreviewEl = document.getElementById('imagePreview');
 
-        if (loginScreenElement && !loginScreenElement.classList.contains('hidden') && loginBackgroundSlideshow) {
-            loginBackgroundSlideshow.classList.remove('hidden');
-            document.body.style.background = 'transparent'; // Ensure slideshow is visible under login form
-        } else if (loginBackgroundSlideshow) {
-            loginBackgroundSlideshow.classList.add('hidden');
-        }
+        if (loginScreenEl) { loginScreenEl.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !loginScreenEl.classList.contains('hidden')) { const activeEl = document.activeElement; if ((activeEl.tagName === 'INPUT' || activeEl.tagName === 'BUTTON') && loginScreenEl.contains(activeEl)) handleLogin(); } }); }
+        if (machineDetailModalEl) { machineDetailModalEl.addEventListener('click', (e) => { if (e.target === machineDetailModalEl) closeMachineDetailModal(); }); }
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && machineDetailModalEl && !machineDetailModalEl.classList.contains('hidden')) closeMachineDetailModal(); });
+        if (loginScreenEl && !loginScreenEl.classList.contains('hidden') && loginBackgroundEl) { loginBackgroundEl.classList.remove('hidden'); document.body.style.background = 'transparent'; } else if (loginBackgroundEl) { loginBackgroundEl.classList.add('hidden');}
     });
 </script>
 </body>
